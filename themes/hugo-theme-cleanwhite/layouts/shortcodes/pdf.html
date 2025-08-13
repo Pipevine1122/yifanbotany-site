@@ -1,0 +1,27 @@
+<!-- layouts/shortcodes/pdf.html -->
+{{/* Usage: {{< pdf src="/files/Yifan_CV.pdf" height="900" >}} */}}
+{{ $src := .Get "src" }}
+{{ $height := or (.Get "height") "900" }}
+
+<div style="width:100%; max-width: 980px; margin: 0 auto;">
+  <div style="margin-bottom: 0.75rem;">
+    <a href="{{ $src }}" download class="btn btn-default" style="padding:8px 14px; border:1px solid #ccc; border-radius:8px; text-decoration:none;">
+      Download CV (PDF)
+    </a>
+    <a href="{{ $src }}" target="_blank" rel="noopener" style="margin-left:12px; text-decoration:none;">
+      Open in new tab
+    </a>
+  </div>
+
+  <!-- Native PDF embed -->
+  <object data="{{ $src }}" type="application/pdf" width="100%" height="{{ $height }}px">
+    <!-- Fallback if the browser can't show PDFs inline -->
+    <iframe src="https://docs.google.com/gview?embedded=1&url={{ $src | absURL }}"
+            width="100%" height="{{ $height }}px" style="border:0;">
+    </iframe>
+  </object>
+
+  <p style="margin-top:0.5rem; font-size:0.9rem; color:#666;">
+    If the viewer doesn’t load, <a href="{{ $src }}" target="_blank" rel="noopener">open the PDF</a> or use the download button above.
+  </p>
+</div>

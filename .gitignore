@@ -1,0 +1,9 @@
+/public/
+/resources/_gen/
+.DS_Store
+hugo_stats.json
+/public/
+/resources/_gen/
+*.psd
+.DS_Store
+hugo_stats.json
