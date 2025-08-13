@@ -1,0 +1,206 @@
+{{ define "main" }}
+<main class="container" style="margin-top:1rem;">
+
+  <style>
+    /* 标题与分节横线 */
+    .g-section-title { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
+    .g-divider { border: 0; height: 1px; background: #ddd; margin: 1.25rem 0; }
+
+    /* 弹性栅格：列数由 CSS 变量与 data-cols 控制 */
+    .gallery-grid {
+      --cols: 2;
+      display: flex; flex-wrap: wrap;
+      margin-left: -0.5rem; margin-right: -0.5rem;
+    }
+    .gallery-cell {
+      padding-left: 0.5rem; padding-right: 0.5rem; margin-bottom: 1rem;
+      flex: 0 0 calc(100% / var(--cols));
+      max-width: calc(100% / var(--cols));
+      display: flex; /* 让 figure 撑满，便于 caption 对齐 */
+    }
+    .gallery-figure { display: flex; flex-direction: column; gap: .4rem; margin: 0; width: 100%; }
+
+    /* 作品容器：高度由 JS 统一设置；图片自适应不裁剪 */
+    .artbox {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      height: auto; /* 由 JS 设置为行高或 section 统一高 */
+    }
+    .artbox img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto; height: auto;
+      object-fit: contain; display: block; margin: 0 auto;
+
+      /* 轻度防下载 */
+      -webkit-user-drag: none;
+      user-select: none; pointer-events: none;
+    }
+    .caption { font-size: .95rem; color: #666; text-align: center; }
+
+    /* —— 自适应竖分割线（桌面端，按 data-cols=2..6 分别处理）—— */
+    /* 规则：每行“非第1列”的单元格加左边线：not(:nth-child(Nn+1)) */
+    .gallery-grid[data-cols="2"] .gallery-cell:not(:nth-child(2n+1)) { border-left: 1px solid #ddd; }
+    .gallery-grid[data-cols="3"] .gallery-cell:not(:nth-child(3n+1)) { border-left: 1px solid #ddd; }
+    .gallery-grid[data-cols="4"] .gallery-cell:not(:nth-child(4n+1)) { border-left: 1px solid #ddd; }
+    .gallery-grid[data-cols="5"] .gallery-cell:not(:nth-child(5n+1)) { border-left: 1px solid #ddd; }
+    .gallery-grid[data-cols="6"] .gallery-cell:not(:nth-child(6n+1)) { border-left: 1px solid #ddd; }
+    /* 给有左边线的单元格留一点内边距 */
+    .gallery-grid[data-cols="2"] .gallery-cell:not(:nth-child(2n+1)) .gallery-figure,
+    .gallery-grid[data-cols="3"] .gallery-cell:not(:nth-child(3n+1)) .gallery-figure,
+    .gallery-grid[data-cols="4"] .gallery-cell:not(:nth-child(4n+1)) .gallery-figure,
+    .gallery-grid[data-cols="5"] .gallery-cell:not(:nth-child(5n+1)) .gallery-figure,
+    .gallery-grid[data-cols="6"] .gallery-cell:not(:nth-child(6n+1)) .gallery-figure { padding-left: 12px; }
+
+    /* —— 响应式：900px 以下强制两列，同时切换“两列分割线规则” —— */
+    @media (max-width: 900px) {
+      .gallery-grid { --cols: 2; }
+      .gallery-grid .gallery-cell { flex-basis: 50%; max-width: 50%; }
+      /* 清除上面的 data-cols 边线，统一用 2 列规则 */
+      .gallery-grid .gallery-cell { border-left: none; }
+      .gallery-grid .gallery-cell:nth-child(2n) { border-left: 1px solid #ddd; }
+      .gallery-grid .gallery-cell:nth-child(2n) .gallery-figure { padding-left: 12px; }
+    }
+
+    /* 600px 以下单列，去掉竖线 */
+    @media (max-width: 600px) {
+      .gallery-grid .gallery-cell { flex-basis: 100%; max-width: 100%; border-left: none; }
+      .gallery-grid .gallery-cell .gallery-figure { padding-left: 0; }
+    }
+
+    /* 页面级轻度防下载（不可避免的截图/DevTools 无法阻止） */
+    body.nodownload, body.nodownload * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+  </style>
+
+  {{/* 读取 sections 配置：未提供时给出默认 LD/WC 两节 */}}
+  {{ $sections := .Params.sections }}
+  {{ if not $sections }}
+    {{ $sections = slice
+      (dict "title" "Line drawings" "match" "artwork/ld_*" "cols" 2 "max_height" 420 "divider_after" true)
+      (dict "title" "Watercolor"    "match" "artwork/wc_*" "cols" 2 "max_height" 420 "divider_after" false)
+    }}
+  {{ end }}
+
+  {{ range $i, $sec := $sections }}
+    {{ $title := or ($sec.title) "Gallery" }}
+    {{ $pat   := or ($sec.match) "artwork/*" }}
+    {{ $cols  := or ($sec.cols) 2 }}
+    {{ $maxH  := or ($sec.max_height) 0 }}  {{/* 0 => 每行等高；>0 => 整节统一高度 */}}
+    {{ $items := $.Resources.Match $pat }}
+
+    {{ if gt (len $items) 0 }}
+      <h2 class="g-section-title">{{ $title }}</h2>
+
+      <div class="gallery-grid" data-cols="{{ $cols }}" data-maxh="{{ $maxH }}" style="--cols: {{ $cols }};">
+        {{ range $items }}
+          {{ $base := replaceRE `\..+$` "" (path.Base .Name) }}
+          <div class="gallery-cell">
+            <figure class="gallery-figure">
+              <div class="artbox">
+                <img src="{{ .RelPermalink }}" alt="{{ $base }}" draggable="false" oncontextmenu="return false;">
+              </div>
+              {{ with (index $.Params.captions $base) }}<figcaption class="caption">{{ . }}</figcaption>{{ end }}
+            </figure>
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+
+    {{ if $sec.divider_after }}<hr class="g-divider">{{ end }}
+  {{ end }}
+
+  <script>
+    (function () {
+      /* 按节/按行计算等高：max_height>0 用固定高；否则逐行取最高图高 */
+      function layoutSections() {
+        document.querySelectorAll('.gallery-grid').forEach(function (grid) {
+          var cells = Array.prototype.slice.call(grid.querySelectorAll('.gallery-cell'));
+          var boxes = Array.prototype.slice.call(grid.querySelectorAll('.artbox'));
+          if (!cells.length || !boxes.length) return;
+
+          boxes.forEach(function (b) { b.style.height = 'auto'; });
+
+          var maxHAttr = grid.getAttribute('data-maxh');
+          var maxHParam = maxHAttr ? parseInt(maxHAttr, 10) : 0;
+          var narrow600 = window.matchMedia('(max-width: 600px)').matches;
+
+          if (maxHParam > 0) {
+            boxes.forEach(function (b) { b.style.height = maxHParam + 'px'; });
+            return;
+          }
+
+          /* 逐行等高：按 offsetTop 分组 */
+          var rows = [];
+          var currentTop = null, currentRow = [];
+          cells.forEach(function (cell) {
+            var top = cell.offsetTop;
+            if (currentTop === null) currentTop = top;
+            if (Math.abs(top - currentTop) < 2) {
+              currentRow.push(cell);
+            } else {
+              rows.push(currentRow); currentRow = [cell]; currentTop = top;
+            }
+          });
+          if (currentRow.length) rows.push(currentRow);
+
+          rows.forEach(function (rowCells) {
+            var tallest = 0;
+            rowCells.forEach(function (cell) {
+              var img = cell.querySelector('.artbox img');
+              var h = img ? (img.clientHeight || img.naturalHeight || 0) : 0;
+              if (h > tallest) tallest = h;
+            });
+            var target = narrow600 ? Math.min(tallest, 360) : tallest;
+            rowCells.forEach(function (cell) {
+              var box = cell.querySelector('.artbox');
+              if (box) box.style.height = target + 'px';
+            });
+          });
+        });
+      }
+
+      function whenAllImagesLoaded(cb) {
+        var imgs = Array.prototype.slice.call(document.querySelectorAll('.artbox img'));
+        var remain = imgs.length;
+        if (remain === 0) return cb();
+        imgs.forEach(function (img) {
+          if (img.complete) { if (--remain === 0) cb(); }
+          else {
+            img.addEventListener('load', function(){ if (--remain === 0) cb(); });
+            img.addEventListener('error', function(){ if (--remain === 0) cb(); });
+          }
+        });
+      }
+
+      function installNoDownload() {
+        document.body.classList.add('nodownload');
+        document.addEventListener('contextmenu', function (e) {
+          if (e.target.closest('.artbox')) e.preventDefault();
+        }, { passive: false });
+        document.addEventListener('dragstart', function (e) {
+          if (e.target.closest('.artbox')) e.preventDefault();
+        }, { passive: false });
+      }
+
+      function onReady(fn) {
+        if (document.readyState.indexOf('in') !== -1) { setTimeout(function(){ onReady(fn); }, 50); }
+        else { fn(); }
+      }
+
+      onReady(function () {
+        installNoDownload();
+        whenAllImagesLoaded(function () {
+          layoutSections();
+          window.addEventListener('resize', layoutSections);
+        });
+      });
+    })();
+  </script>
+
+  <!-- 提示：这只是“防君子不防小人”的阻拦；截图/DevTools 仍可获取图像。 -->
+
+</main>
+{{ end }}

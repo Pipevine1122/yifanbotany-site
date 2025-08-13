@@ -1,0 +1,45 @@
+{{ define "main" }}
+
+{{/* Resolve banner image */}}
+{{ $banner := cond (and .Params.banner (ne .Params.banner "")) (.Resources.GetMatch .Params.banner) nil }}
+{{ if not $banner }}
+  {{ $all := .Resources.ByType "image" }}
+  {{ if gt (len $all) 0 }}{{ $banner = index $all 0 }}{{ end }}
+{{ end }}
+
+{{ $alt := or .Params.banner_alt .Title }}
+
+<main class="container about-content">
+
+  {{ if $banner }}
+    <div class="about-banner">
+      <img src="{{ $banner.RelPermalink }}" alt="{{ $alt }}">
+    </div>
+  {{ end }}
+
+  <h1 class="page-title">{{ .Title }}</h1>
+  {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+  <div class="content-body">
+    {{ .Content }}
+  </div>
+
+</main>
+
+<style>
+.about-content { padding-top: 1.25rem; padding-bottom: 2.5rem; }
+.about-banner {
+  margin-bottom: 1.25rem;
+}
+.about-banner img {
+  display: block;
+  width: 56%;          /* match container width */
+  height: auto;         /* keep full height, no crop */
+  object-fit: contain;  /* show entire image */
+  margin: 0 auto;       /* center horizontally */
+}
+.page-title { margin: 0 0 .25rem 0; }
+.subtitle { margin: 0 0 1rem 0; color: #666; }
+.content-body img { max-width: 100%; height: auto; }
+</style>
+
+{{ end }}
