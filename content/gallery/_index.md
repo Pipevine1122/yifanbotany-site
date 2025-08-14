@@ -3,11 +3,18 @@ title: "Gallery"
 
 # Captions map (key = basename without extension)
 captions:
-  ld_1: "Line drawing #1 © Binyu Zhao"
-  ld_2: "Line drawing #2 © Binyu Zhao"
-  ld_3: "Line drawing #3 © Yushan Cai"
-  wc_1: "Watercolor #1 © Binyu Zhao"
-  wc_2: "Watercolor #2 © Binyu Zhao"
+  ld_1: "Line drawing #1 © Viola Studio"
+  ld_2: "*Cypripedium tibeticum* © Viola Studio"
+  ld_3: "*Aristolochia zhuhaiensis* © Viola Studio"
+  ld_4: "*Aristolochia pendostoma* sp. nov. © Viola Studio"
+  ld_5: "*Aristolochia geantha* © Viola Studio"
+  ld_6: "*Aristolochia pulvinata* © Viola Studio"
+  wc_1: "*Yulania denudata* © Viola Studio"
+  wc_2: "*Nepenthes jamban* © Viola Studio"
+  wc_3: "*Balistoides conspicillum* © Viola Studio"
+  wc_4: "*Rhizanthes deceptor* © Viola Studio"
+  wc_5: "*Rafflesia panchoana* © Viola Studio"
+  wc_6: "*Amorphophallus hayi* © Viola Studio"
   mini_1: "Cute element #1"
 
 # Define sections. Add more later as you wish.

@@ -1,43 +1,51 @@
 <!-- post list -->
 <div data-pagefind-ignore="all">
-{{ range $index, $element := $.Paginator.Pages }}
-<div class="post-preview">
-    <a href="{{ .Permalink }}">
-        <h2 class="post-title">
-            {{ .Title }}
-        </h2>
-	{{with .Params.subtitle }}
-        <h3 class="post-subtitle">
-            {{ . }}
-        </h3>
-	{{ end }}
-        <div class="post-content-preview">
-	{{ with .Description }}
-            {{ . }}
-        {{ else }}
-            {{ .Summary}}
-       {{ end }}
-        </div>
-    </a>
-    <p class="post-meta">
-    {{ if .Params.metadata }}
-        {{ range $index, $element := .Params.metadata }}
-            {{ if .link }}
-                <a href="{{ .link }}">{{ .text }}</a>
-            {{ else }}
-                {{ .text }}
-            {{ end }}
-        {{ end }}
-    {{ else }}
-        Posted by {{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }} on {{ .Date.Format "Monday, January 2, 2006" }}
-        <!-- Don't show "Last Modified on" if update happened on the same day. -->
-        {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat "2006-01-02" .Lastmod) (dateFormat "2006-01-02" .Date)))) }}
-            <br>Last Modified on {{ dateFormat "Monday, January 2, 2006" .Params.LastMod }} 
-        {{ end }}
-    {{ end }}
-    </p>
+{{ $pages := $.Paginator.Pages }}
+{{ if gt (len $pages) 0 }}
 
-</div>
-<hr>
+  {{ range $index, $element := $pages }}
+  <div class="post-preview">
+      <a href="{{ .Permalink }}">
+          <h2 class="post-title">{{ .Title }}</h2>
+          {{ with .Params.subtitle }}<h3 class="post-subtitle">{{ . }}</h3>{{ end }}
+          <div class="post-content-preview">
+            {{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}
+          </div>
+      </a>
+      <p class="post-meta">
+        {{ if .Params.metadata }}
+          {{ range $i, $m := .Params.metadata }}
+            {{ if $m.link }}<a href="{{ $m.link }}">{{ $m.text }}</a>{{ else }}{{ $m.text }}{{ end }}
+          {{ end }}
+        {{ else }}
+          Posted by {{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }} on {{ .Date.Format "Monday, January 2, 2006" }}
+          {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat "2006-01-02" .Lastmod) (dateFormat "2006-01-02" .Date)))) }}
+            <br>Last Modified on {{ dateFormat "Monday, January 2, 2006" .Params.LastMod }}
+          {{ end }}
+        {{ end }}
+      </p>
+  </div>
+  <hr>
+  {{ end }}
+
+{{ else }}
+
+  <!-- No posts: render home welcome inside the SAME column -->
+  <article class="post-preview">
+    <h1 class="post-title">{{ with .Title }}{{ . }}{{ else }}Welcome{{ end }}</h1>
+    {{ with .Content }}
+      <div class="post-content">{{ . }}</div>
+    {{ else }}
+      <p class="post-subtitle">Welcome to my portfolio and research site.</p>
+    {{ end }}
+    <p class="post-meta">
+      <a href="/publications/">Publications</a> ·
+      <a href="/gallery/">Gallery</a> ·
+      <a href="/album/">Album</a> ·
+      <a href="/about/">About</a>
+    </p>
+  </article>
+
 {{ end }}
 </div>
+

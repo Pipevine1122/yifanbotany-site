@@ -18,7 +18,7 @@
       max-width: calc(100% / var(--cols));
       display: flex; /* 让 figure 撑满，便于 caption 对齐 */
     }
-    .gallery-figure { display: flex; flex-direction: column; gap: .4rem; margin: 0; width: 100%; }
+    .gallery-figure { display: flex; flex-direction: column; gap: .25rem; margin: 0; width: 100%; }
 
     /* 作品容器：高度由 JS 统一设置；图片自适应不裁剪 */
     .artbox {
@@ -36,36 +36,31 @@
       -webkit-user-drag: none;
       user-select: none; pointer-events: none;
     }
-    .caption { font-size: .95rem; color: #666; text-align: center; }
 
-    /* —— 自适应竖分割线（桌面端，按 data-cols=2..6 分别处理）—— */
-    /* 规则：每行“非第1列”的单元格加左边线：not(:nth-child(Nn+1)) */
-    .gallery-grid[data-cols="2"] .gallery-cell:not(:nth-child(2n+1)) { border-left: 1px solid #ddd; }
-    .gallery-grid[data-cols="3"] .gallery-cell:not(:nth-child(3n+1)) { border-left: 1px solid #ddd; }
-    .gallery-grid[data-cols="4"] .gallery-cell:not(:nth-child(4n+1)) { border-left: 1px solid #ddd; }
-    .gallery-grid[data-cols="5"] .gallery-cell:not(:nth-child(5n+1)) { border-left: 1px solid #ddd; }
-    .gallery-grid[data-cols="6"] .gallery-cell:not(:nth-child(6n+1)) { border-left: 1px solid #ddd; }
-    /* 给有左边线的单元格留一点内边距 */
-    .gallery-grid[data-cols="2"] .gallery-cell:not(:nth-child(2n+1)) .gallery-figure,
-    .gallery-grid[data-cols="3"] .gallery-cell:not(:nth-child(3n+1)) .gallery-figure,
-    .gallery-grid[data-cols="4"] .gallery-cell:not(:nth-child(4n+1)) .gallery-figure,
-    .gallery-grid[data-cols="5"] .gallery-cell:not(:nth-child(5n+1)) .gallery-figure,
-    .gallery-grid[data-cols="6"] .gallery-cell:not(:nth-child(6n+1)) .gallery-figure { padding-left: 12px; }
+    /* caption：更大、更近、默认非斜体；仅 <em>/<i> 才斜体 */
+    .caption { font-size: 1.05rem; color: #444; text-align: center; margin-top: .2rem; font-style: normal; }
+    .caption em, .caption i { font-style: italic; }
 
-    /* —— 响应式：900px 以下强制两列，同时切换“两列分割线规则” —— */
+    /* —— 自适应竖分割线（桌面端，按 data-cols=2..6 分别处理），仅画在 .artbox 上 —— */
+    .gallery-grid[data-cols="2"] .gallery-cell:not(:nth-child(2n+1)) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
+    .gallery-grid[data-cols="3"] .gallery-cell:not(:nth-child(3n+1)) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
+    .gallery-grid[data-cols="4"] .gallery-cell:not(:nth-child(4n+1)) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
+    .gallery-grid[data-cols="5"] .gallery-cell:not(:nth-child(5n+1)) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
+    .gallery-grid[data-cols="6"] .gallery-cell:not(:nth-child(6n+1)) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
+
+    /* —— 响应式：900px 以下强制两列，同时切换“两列分割线规则”，线仍只在图片之间 —— */
     @media (max-width: 900px) {
       .gallery-grid { --cols: 2; }
       .gallery-grid .gallery-cell { flex-basis: 50%; max-width: 50%; }
-      /* 清除上面的 data-cols 边线，统一用 2 列规则 */
-      .gallery-grid .gallery-cell { border-left: none; }
-      .gallery-grid .gallery-cell:nth-child(2n) { border-left: 1px solid #ddd; }
-      .gallery-grid .gallery-cell:nth-child(2n) .gallery-figure { padding-left: 12px; }
+      /* 仅给偶数列的 .artbox 画线并留内边距 */
+      .gallery-grid .artbox { border-left: none; padding-left: 0; }
+      .gallery-grid .gallery-cell:nth-child(2n) .artbox { border-left: 1px solid #ddd; padding-left: 12px; }
     }
 
     /* 600px 以下单列，去掉竖线 */
     @media (max-width: 600px) {
-      .gallery-grid .gallery-cell { flex-basis: 100%; max-width: 100%; border-left: none; }
-      .gallery-grid .gallery-cell .gallery-figure { padding-left: 0; }
+      .gallery-grid .gallery-cell { flex-basis: 100%; max-width: 100%; }
+      .gallery-grid .artbox { border-left: none; padding-left: 0; }
     }
 
     /* 页面级轻度防下载（不可避免的截图/DevTools 无法阻止） */
@@ -102,7 +97,7 @@
               <div class="artbox">
                 <img src="{{ .RelPermalink }}" alt="{{ $base }}" draggable="false" oncontextmenu="return false;">
               </div>
-              {{ with (index $.Params.captions $base) }}<figcaption class="caption">{{ . }}</figcaption>{{ end }}
+              {{ with (index $.Params.captions $base) }}<figcaption class="caption">{{ . | markdownify }}</figcaption>{{ end }}
             </figure>
           </div>
         {{ end }}
@@ -204,3 +199,4 @@
 
 </main>
 {{ end }}
+
