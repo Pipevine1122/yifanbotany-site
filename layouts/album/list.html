@@ -5,7 +5,7 @@
     /* ===== Album intro（更大、更清晰，且与首列照片左边对齐） ===== */
     .album-intro{
       margin: 0 0 1rem 0;
-      font-size: 2.8rem;       /* 原先的 `rem` 无效，改为具体值 */
+      font-size: 2.8rem;       /* 你的设置 */
       line-height: 1.65;
       color: #444;
       grid-column: 1 / -1;   /* 放进 grid，跨两列 */
@@ -25,6 +25,7 @@
     }
 
     .album-figure{
+      position: relative;        /* 为了放下载屏蔽层 */
       margin: 0;
       display: flex;
       flex-direction: column;
@@ -34,13 +35,25 @@
       box-sizing: border-box;
     }
 
-    /* 图片自适应比例，不裁切不拉伸 */
+    /* 图片自适应比例，不裁切不拉伸；禁止选中/拖拽/长按菜单（移动端） */
     .album-photo{
       width: 100%;
       height: auto;
       display: block;
       object-fit: contain;
       border: 1px solid #eee;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;  /* iOS 长按呼出保存菜单 */
+    }
+
+    /* 覆盖层：拦截右键 & 拖拽 */
+    .img-shield{
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: transparent;
     }
 
     /* caption：双线边框，与图片同宽；用 flex 居中 cap-inner（唯一子项） */
@@ -81,7 +94,7 @@
       display: inline;
     }
 
-    /* 可选悬浮效果 */
+    /* 可选悬浮效果（放在 figure 上，避免被 shield 拦截） */
     .album-figure:hover .album-photo{
       box-shadow: 0 2px 12px rgba(0,0,0,.06);
       transition: box-shadow .2s ease;
@@ -100,7 +113,8 @@
       {{ range $imgs }}
         {{ $base := replaceRE `\..+$` "" (path.Base .Name) }}
         <figure class="album-figure">
-          <img class="album-photo" src="{{ .RelPermalink }}" alt="{{ $base }}">
+          <div class="img-shield" aria-hidden="true"></div>
+          <img class="album-photo" src="{{ .RelPermalink }}" alt="{{ $base }}" draggable="false">
           {{ with (index $.Params.captions $base) }}
             <figcaption class="album-caption"><div class="cap-inner">{{ . | markdownify }}</div></figcaption>
           {{ else }}
@@ -199,6 +213,32 @@
         });
       }
 
+      // ==== 禁止下载：右键/拖拽/长按 ====
+      function hardenImages(){
+        var grid = document.getElementById('albumGrid');
+        if (!grid) return;
+
+        // 禁止拖拽
+        grid.querySelectorAll('img.album-photo').forEach(function(img){
+          img.setAttribute('draggable', 'false');
+          img.addEventListener('dragstart', function(e){ e.preventDefault(); });
+        });
+
+        // 屏蔽右键（只对图片和屏蔽层）
+        grid.addEventListener('contextmenu', function(e){
+          if (e.target.classList.contains('album-photo') || e.target.classList.contains('img-shield')) {
+            e.preventDefault();
+          }
+        }, true);
+
+        // 移动端：长按大多已由 -webkit-touch-callout:none 处理，这里补充一次
+        grid.addEventListener('touchstart', function(e){
+          if (e.target.classList.contains('album-photo') || e.target.classList.contains('img-shield')) {
+            // 可按需在这里记录日志或弹提示
+          }
+        }, {passive:true});
+      }
+
       function onReady(fn){
         if (document.readyState.indexOf('in') !== -1) {
           setTimeout(function(){ onReady(fn); }, 50);
@@ -210,6 +250,7 @@
         if (!grid) return;
         whenAllImagesLoaded(grid, function(){
           equalizeRows();
+          hardenImages();
           window.addEventListener('resize', equalizeRows);
         });
       });
@@ -218,3 +259,4 @@
 
 </main>
 {{ end }}
+

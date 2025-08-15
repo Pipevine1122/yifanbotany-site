@@ -130,6 +130,24 @@ menu:
     white-space: nowrap;   /* 避免换行，底边统一 */
     min-height: 1.2em;     /* 固定一行的高度，行底对齐更整齐 */
   }
+
+  /* ==== 禁止下载：覆盖层 + 禁止选中/拖拽/长按 ==== */
+  .cover-gallery figure{ position: relative; }
+  .cover-gallery figure::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;            /* 覆盖在图片上层，拦截右键/拖拽 */
+    background: transparent;
+    pointer-events: auto;
+  }
+
+  .cover-gallery img{
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;   /* iOS 长按菜单 */
+  }
 </style>
 
 
@@ -156,3 +174,20 @@ menu:
   </figure>
 </div>
 
+<script>
+(function(){
+  var gallery = document.querySelector('.cover-gallery');
+  if(!gallery) return;
+
+  // 禁止拖拽保存
+  gallery.querySelectorAll('img').forEach(function(img){
+    img.setAttribute('draggable','false');
+    img.addEventListener('dragstart', function(e){ e.preventDefault(); });
+  });
+
+  // 局部屏蔽右键菜单（仅在封面区域）
+  gallery.addEventListener('contextmenu', function(e){
+    e.preventDefault();
+  }, true);
+})();
+</script>
