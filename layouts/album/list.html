@@ -1,0 +1,220 @@
+{{ define "main" }}
+<main class="container" style="margin-top:1rem;">
+
+  <style>
+    /* ===== Album intro（更大、更清晰，且与首列照片左边对齐） ===== */
+    .album-intro{
+      margin: 0 0 1rem 0;
+      font-size: 2.8rem;       /* 原先的 `rem` 无效，改为具体值 */
+      line-height: 1.65;
+      color: #444;
+      grid-column: 1 / -1;   /* 放进 grid，跨两列 */
+      justify-self: start;   /* 与首列内容左边缘对齐 */
+      text-align: left;      /* 明确左对齐 */
+    }
+
+    /* ===== Album layout: 两列网格，卡片限宽 ===== */
+    .album-grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      justify-items: start;      /* 关键：让卡片在各自格子内左对齐 */
+    }
+    @media (max-width: 720px){
+      .album-grid{ grid-template-columns: 1fr; }
+    }
+
+    .album-figure{
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;                 /* 图与 caption 的固定间距（gap 恒定） */
+      width: 100%;
+      max-width: 520px;         /* 控制卡片最大宽度，避免过宽 */
+      box-sizing: border-box;
+    }
+
+    /* 图片自适应比例，不裁切不拉伸 */
+    .album-photo{
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      border: 1px solid #eee;
+    }
+
+    /* caption：双线边框，与图片同宽；用 flex 居中 cap-inner（唯一子项） */
+    .album-caption{
+      margin: 0;
+      padding: .55rem .7rem;
+      border: 2px double #c9c9c9;
+      line-height: 1.35;
+      font-size: 1rem;
+      color: #555;
+      width: 100%;
+      box-sizing: border-box;
+      background: transparent;
+
+      display: flex;              /* 让 cap-inner 成为唯一 flex 子项 */
+      align-items: center;        /* 垂直居中 */
+      justify-content: center;    /* 水平居中 */
+      text-align: center;         /* 多行居中 */
+
+      white-space: normal;        /* 正常换行 */
+      overflow-wrap: break-word;  /* 仅长词断开 */
+      word-break: normal;
+      /* 高度由 JS 动态设置 min-height 以对齐每行总高度 */
+    }
+
+    /* cap-inner：占满宽度；把 markdownify 生成的 <p> 变成 inline，去掉默认外边距 */
+    .album-caption .cap-inner{ width: 100%; }
+    .album-caption .cap-inner > p{
+      margin: 0;
+      display: inline;
+    }
+
+    /* 斜体正常换行 */
+    .album-caption em,
+    .album-caption i{
+      font-style: italic;
+      white-space: normal;
+      display: inline;
+    }
+
+    /* 可选悬浮效果 */
+    .album-figure:hover .album-photo{
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: box-shadow .2s ease;
+    }
+  </style>
+
+  {{/* 收集当前页面 bundle 中的所有图片资源 */}}
+  {{ $imgs := .Resources.ByType "image" }}
+
+  {{ if or (gt (len $imgs) 0) .Params.intro }}
+    <div class="album-grid" id="albumGrid">
+      {{ with .Params.intro }}
+        <div class="album-intro">{{ . | markdownify }}</div>
+      {{ end }}
+
+      {{ range $imgs }}
+        {{ $base := replaceRE `\..+$` "" (path.Base .Name) }}
+        <figure class="album-figure">
+          <img class="album-photo" src="{{ .RelPermalink }}" alt="{{ $base }}">
+          {{ with (index $.Params.captions $base) }}
+            <figcaption class="album-caption"><div class="cap-inner">{{ . | markdownify }}</div></figcaption>
+          {{ else }}
+            <figcaption class="album-caption"><div class="cap-inner"></div></figcaption>
+          {{ end }}
+        </figure>
+      {{ end }}
+    </div>
+  {{ else }}
+    <p>No photos yet. Add images to <code>content/album/</code> and refresh.</p>
+  {{ end }}
+
+  <script>
+    (function(){
+      function whenAllImagesLoaded(scope, cb){
+        var imgs = Array.prototype.slice.call(scope.querySelectorAll('img'));
+        var remain = imgs.length;
+        if (remain === 0) return cb();
+        imgs.forEach(function(img){
+          if (img.complete) {
+            if (--remain === 0) cb();
+          } else {
+            img.addEventListener('load', function(){ if (--remain === 0) cb(); });
+            img.addEventListener('error', function(){ if (--remain === 0) cb(); });
+          }
+        });
+      }
+
+      // 按行对齐：让每行中 “图片 + 固定gap + caption” 的总高度一致
+      function equalizeRows(){
+        var grid = document.getElementById('albumGrid');
+        if (!grid) return;
+
+        var figures = Array.prototype.slice.call(grid.querySelectorAll('.album-figure'));
+        if (!figures.length) return;
+
+        // 重置之前的 min-height
+        figures.forEach(function(fig){
+          var cap = fig.querySelector('.album-caption');
+          if (cap) cap.style.minHeight = '';
+        });
+
+        // 以 offsetTop 分组为“行”，两列布局下每行最多两个
+        var rows = [];
+        var currentTop = null, current = [];
+        figures.forEach(function(fig){
+          var top = fig.offsetTop;
+          if (currentTop === null) currentTop = top;
+          if (Math.abs(top - currentTop) < 2) {
+            current.push(fig);
+          } else {
+            rows.push(current);
+            current = [fig];
+            currentTop = top;
+          }
+        });
+        if (current.length) rows.push(current);
+
+        // 对每一行计算需要的总高度，并为每个 caption 设置 min-height 补齐
+        rows.forEach(function(row){
+          var targetTotal = 0;
+          row.forEach(function(fig){
+            var img = fig.querySelector('.album-photo');
+            var cap = fig.querySelector('.album-caption');
+            var gap = 6; // 与 CSS 中的 .album-figure gap 保持一致
+            var imgH = img ? img.getBoundingClientRect().height : 0;
+
+            if (cap) {
+              var prev = cap.style.minHeight;
+              cap.style.minHeight = '';
+              var capH = cap.getBoundingClientRect().height;
+              cap.style.minHeight = prev;
+
+              var total = imgH + gap + capH;
+              if (total > targetTotal) targetTotal = total;
+            } else {
+              if (imgH + gap > targetTotal) targetTotal = imgH + gap;
+            }
+          });
+
+          row.forEach(function(fig){
+            var img = fig.querySelector('.album-photo');
+            var cap = fig.querySelector('.album-caption');
+            if (!cap) return;
+
+            var gap = 6;
+            var imgH = img ? img.getBoundingClientRect().height : 0;
+
+            cap.style.minHeight = '';
+            var natH = cap.getBoundingClientRect().height;
+
+            var needed = targetTotal - imgH - gap;
+            if (needed < natH) needed = natH;
+            cap.style.minHeight = needed + 'px';
+          });
+        });
+      }
+
+      function onReady(fn){
+        if (document.readyState.indexOf('in') !== -1) {
+          setTimeout(function(){ onReady(fn); }, 50);
+        } else { fn(); }
+      }
+
+      onReady(function(){
+        var grid = document.getElementById('albumGrid');
+        if (!grid) return;
+        whenAllImagesLoaded(grid, function(){
+          equalizeRows();
+          window.addEventListener('resize', equalizeRows);
+        });
+      });
+    })();
+  </script>
+
+</main>
+{{ end }}

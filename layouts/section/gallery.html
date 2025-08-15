@@ -1,6 +1,119 @@
 {{ define "main" }}
 <main class="container" style="margin-top:1rem;">
 
+  <!-- Studio intro (paste right after <main ...>) -->
+<div class="gallery-intro" style="--title-size: 3.2rem; --body-size: 1.5rem; --crest-size: 110px; --brand-color: #57068C;">
+  <div class="studio-crest">
+    <!-- TODO: replace with your crest file -->
+    <img src="/img/viola-crest.png" alt="Studio Viola Crest">
+  </div>
+
+<!-- 新增：中间竖线分隔 -->
+  <div class="studio-sep" aria-hidden="true"></div>
+
+  <div class="studio-text">
+    <h1 class="studio-title">
+      Studio Viola
+      <span class="brand-mark">™</span>
+    </h1>
+    <p class="studio-desc">
+      Other than research, I also love appreciating the beauty behind organisms.<br>  
+      <strong style="color:#57068C;">Studio Viola<sup>™</sup></strong>, est. 2025, founded by me, Ms. Binyu Zhao, and Ms. Yushan Cai,  
+      pursues the goal of making botanical and biological knowledge accessible yet  
+      deeply engaging through beautifully crafted, clearly representational visual aids with the aim of wider reach and greater impact. Here, we create, illustrate, and digitize  
+      art inspired by plants, animals, fungi, and the natural world. We work with old-school  
+      botanical techniques such as pointillism and ink drawing, and we also embrace modern  
+      approaches including digital painting and 3D modeling. Please enjoy some of our featured  
+      works below.<br> 
+      We also welcome art commissions – shoot me an email for more details.
+    </p>
+    <p class="studio-contacts">
+      <a href="mailto:pipevine1122@gmail.com">pipevine1122@gmail.com</a> |
+      <a href="mailto:violastudio.commission@gmail.com">violastudio.commission@gmail.com</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  /* ===== Studio intro (scoped) ===== */
+  .gallery-intro{
+    display: flex;
+    align-items: stretch; /* 等高对齐左右两侧 */
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: #333;
+  }
+  /* 竖直分隔线 */
+  .gallery-intro .studio-sep{
+    width:1px;
+    background:#ddd;
+    align-self:stretch;   /* 跟随两侧等高 */
+    /* 为了和左右保持间距，利用现有 gap 已足够，无需额外 margin */
+  }
+  .gallery-intro .studio-crest{
+    display: flex; /* 让 img 充满容器高度 */
+    align-items: stretch;
+  }
+  .gallery-intro .studio-crest img{
+    max-width: var(--crest-size, 100px);
+    height: 100%; /* 自适应右侧文字高度 */
+    object-fit: contain; /* 保持比例不裁切 */
+    display: block;
+  }
+  .gallery-intro .studio-text{ flex: 1; }
+
+  .gallery-intro .studio-title{
+    margin: 0 0 .4rem 0;
+    font-size: var(--title-size, 2rem);
+    line-height: 1.1;
+    color: var(--brand-color, #57068C); /* NYU Violet */
+    position: relative;
+    display: inline-block;
+  }
+  .gallery-intro .brand-mark{
+    position: absolute;
+    top: -0.15em;
+    right: -1.1em;
+    font-size: .45em;
+    color: var(--brand-color, #57068C);
+  }
+  .gallery-intro .studio-desc{
+    margin: 0; 
+    font-size: var(--body-size, 1.1rem);
+    line-height: 1.7;
+    color: #2b2b2b;
+  }
+  .gallery-intro .studio-contacts{
+    margin: .6rem 0 0 0; 
+    font-size: calc(var(--body-size, 1.1rem) * .95);
+  }
+  .gallery-intro .studio-contacts a{
+    color: var(--brand-color, #57068C);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(87,6,140,.25);
+  }
+  .gallery-intro .studio-contacts a:hover{
+    border-bottom-color: currentColor;
+  }
+  .studio-divider{
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1.25rem 0 1rem 0;
+  }
+
+  /* Small screens: stack crest above text */
+  @media (max-width: 600px){
+    .gallery-intro{ flex-direction: column; align-items: flex-start; }
+    .gallery-intro .studio-crest img{
+      height: auto; /* 小屏恢复正常比例 */
+    }
+    .gallery-intro .brand-mark{ right: -0.9em; }
+  }
+</style>
+
+<hr style="border: 0; border-top: 1px solid #ccc; margin: 1.5rem 0;">
+
+
   <style>
     /* 标题与分节横线 */
     .g-section-title { margin: 0 0 0.75rem 0; font-size: 1.5rem; }
@@ -196,7 +309,11 @@
   </script>
 
   <!-- 提示：这只是“防君子不防小人”的阻拦；截图/DevTools 仍可获取图像。 -->
+<hr class="studio-divider">
 
+<p style="font-size: 0.9rem; color: #666; margin-top: 1rem; text-align: center;">
+  <span style="color: #57068C;">Studio Viola<sup>™</sup></span> is a trademark of Yifan Wang, Binyu Zhao, and Yushan Cai.
+</p>
 </main>
 {{ end }}
 
