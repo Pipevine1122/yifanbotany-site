@@ -1,0 +1,145 @@
+{{ define "main" }}
+<main class="container" style="margin-top:1rem;">
+
+  <style>
+    .pub-link-row{
+      display:flex; justify-content:center; align-items:center;
+      gap:80px; margin:.5rem 0 1rem; flex-wrap:wrap;
+    }
+    .pub-link{ display:inline-flex; align-items:center; gap:6px;
+      text-decoration:none; color:#000; font-weight:700; }
+    .pub-link:hover{ text-decoration:underline; }
+    .pub-link img{ height:24px; width:auto; display:block; }
+    .thin-divider{ border:none; border-top:1px solid #ccc; margin:1.2rem 0; }
+
+    /* ==== Publications covers (fixed desktop behavior, safe on phones) ==== */
+
+    /* define uniform desktop height */
+    .cover-gallery { --cover-h: 240px; }
+
+    .cover-gallery{
+      display:flex; flex-wrap:wrap; gap:6px;
+      align-items:flex-start; justify-content:flex-start;
+      margin:.5rem 0 1.5rem; overflow:hidden;
+    }
+    .cover-gallery figure{
+      margin:0; display:flex; flex-direction:column; align-items:center;
+      flex:0 0 auto;                /* don't stretch */
+      max-width:100%;               /* don't overflow container */
+      position:relative;            /* for optional overlay */
+    }
+
+    /* --- Mobile default: do NOT force full width; scale down if needed --- */
+    .cover-gallery img{
+      width:auto;                   /* natural width */
+      height:auto;                  /* natural height */
+      max-width:100%;               /* shrink if wider than screen */
+      max-height:60vh;              /* prevent super tall images on tiny screens */
+      display:block;
+      border:1px solid #ddd;
+
+      /* (optional) smooth fade/blur-in */
+      opacity:0; filter:blur(10px); transform:scale(1.01);
+      transition:opacity .45s ease, filter .45s ease, transform .45s ease;
+
+      user-select:none; -webkit-user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none;
+    }
+    .cover-gallery img.lazyloaded{ opacity:1; filter:blur(0); transform:none; }
+
+    /* --- Desktop / wide screens: restore the old uniform-height look --- */
+    @media (min-width: 720px){
+      .cover-gallery img{
+        height: var(--cover-h);     /* uniform cover height like before */
+        width: auto;                /* width follows aspect ratio */
+        max-width: none;            /* allow multiple columns naturally */
+        max-height: none;
+      }
+    }
+
+    /* caption (unchanged) */
+    .cover-gallery figcaption{
+      margin-top:2px; line-height:1.2; font-size:.85em; color:#555;
+      white-space:nowrap; min-height:1.2em;
+    }
+
+    /* (optional) download-block overlay: keep if you used it */
+    .cover-gallery figure::after{
+      content:""; position:absolute; inset:0; z-index:3; background:transparent; pointer-events:auto;
+    }
+
+    /* Publication list links: visible as links by default */
+    .pub-list a{
+      color: #0645ad;              /* classic link blue */
+      text-decoration: underline;
+    }
+    .pub-list a:visited{ color: #0b0080; }
+    .pub-list a:hover{ color: #3366cc; }
+
+    /* If you also want the top ResearchGate/Scholar links to look like links: */
+    .pub-link{
+      color: #0645ad !important;
+      text-decoration: underline !important;
+    }
+
+
+  </style>
+
+  <!-- Top links -->
+  <div class="pub-link-row">
+    <a class="pub-link" href="https://www.researchgate.net/profile/Yifan-Wang-188" target="_blank" rel="noopener">
+      <img src="/img/icons/researchgate-official.png" alt="ResearchGate"><span>ResearchGate</span>
+    </a>
+    <a class="pub-link" href="https://scholar.google.com/citations?user=Jkx1GyYAAAAJ&hl=en" target="_blank" rel="noopener">
+      <img src="/img/icons/googlescholar-official.png" alt="Google Scholar"><span>Google Scholar</span>
+    </a>
+  </div>
+
+  <hr class="thin-divider">
+
+  <!-- Main content from _index.md (keep your <ol> list here) -->
+  <div class="pub-list">
+    {{ .Content }}
+  </div>
+
+  <hr class="thin-divider">
+
+  <!-- Covers (edit sources/captions here as needed) -->
+  <div class="cover-gallery" id="pubCovers">
+    <figure>
+      <img class="lazyload" data-src="/img/covers/mpe2025.png" alt="MPE 2025"
+           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+      <figcaption>Wang et al., 2025</figcaption>
+    </figure>
+    <figure>
+      <img class="lazyload" data-src="/img/covers/taiwania2025.png" alt="Taiwania 2025"
+           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+      <figcaption>Guo et al., 2025</figcaption>
+    </figure>
+    <figure>
+      <img class="lazyload" data-src="/img/covers/pk2025.png" alt="PhytoKeys 2025"
+           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+      <figcaption>Wang et al., 2025</figcaption>
+    </figure>
+    <figure>
+      <img class="lazyload" data-src="/img/covers/pt2024.png" alt="Phytotaxa 2024"
+           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==">
+      <figcaption>Zhang et al., 2024</figcaption>
+    </figure>
+  </div>
+
+  <script>
+    (function(){
+      var g = document.getElementById('pubCovers');
+      if(!g) return;
+
+      // disable drag & right-click within cover area
+      g.querySelectorAll('img').forEach(function(img){
+        img.setAttribute('draggable','false');
+        img.addEventListener('dragstart', function(e){ e.preventDefault(); });
+      });
+      g.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+    })();
+  </script>
+
+</main>
+{{ end }}
