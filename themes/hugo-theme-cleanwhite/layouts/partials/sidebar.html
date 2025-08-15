@@ -236,18 +236,24 @@
     </section>
     {{ end }}
 
-    <!-- Friends Blog -->
-    {{ if .Site.Params.friends }}
+    {{/* Home Labs block (backward-compatible with old 'friends' params) */}}
+    {{ $enabled := or .Site.Params.home_labs .Site.Params.friends }}
+    {{ if $enabled }}
     <section>
-        <hr class="hidden-sm hidden-xs">
-        <h5>FRIENDS</h5>
-        <ul class="list-inline">
-            {{ range .Site.Params.friend_link }}
-            <li><a target="_blank" href="{{.href}}">{{.title}}</a></li>
-            {{ end }}
-        </ul>
+      <hr class="hidden-sm hidden-xs">
+
+      {{ $title := or .Site.Params.home_labs_title .Site.Params.friend_section_title "Home Labs & Training" }}
+      <h5>{{ $title }}</h5>
+
+      <ul class="list-inline">
+        {{ $links := or .Site.Params.home_labs_link .Site.Params.friend_link }}
+        {{ range $links }}
+          <li><a target="_blank" href="{{ .href }}">{{ .title }}</a></li>
+        {{ end }}
+      </ul>
     </section>
     {{ end }}
+
     {{ if .Site.Params.publications }}
     <section>
         <hr class="hidden-sm hidden-xs">

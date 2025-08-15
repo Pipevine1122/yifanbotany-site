@@ -1,0 +1,75 @@
+{{ define "main" }}
+<main class="container" style="margin-top:1rem;">
+
+  {{/* Hide hero by default; show only if explicitly enabled */}}
+  {{ $show := .Params.show_cover_on_single | default false }}
+  {{ if $show }}
+    {{ $cover := .Params.thumbnail }}
+    {{ if not $cover }}{{ with .Params.images }}{{ $cover = index . 0 }}{{ end }}{{ end }}
+    {{ if $cover }}
+      {{ with .Resources.GetMatch $cover }}
+        {{ with (.Fill "1200x1200 center") }}
+          <figure class="hero no-save" oncontextmenu="return false">
+            <img src="{{ .RelPermalink }}" alt="{{ $.Title | plainify }}" draggable="false">
+          </figure>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  <h1 class="page-title">{{ .Title | markdownify }}</h1>
+  <div class="meta">
+    <time datetime="{{ .Date }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+    {{ with .Params.status }} · <span class="status">{{ . }}</span>{{ end }}
+  </div>
+
+  <article class="content-body">
+    {{ .Content }}   {{/* 不插入 .Summary，不会重复卡片摘要 */}}
+  </article>
+
+  <!-- Anchored sections -->
+  <section id="papers" class="outputs">
+    <h3>Papers</h3>
+    {{ with .Params.papers }}
+      <ul>{{ range . }}<li><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>{{ end }}</ul>
+    {{ else }}<p class="muted">To be added.</p>{{ end }}
+  </section>
+
+  <section id="resources" class="outputs">
+    <h3>Software &amp; Data</h3>
+    {{ with .Params.resources }}
+      <ul>{{ range . }}<li><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>{{ end }}</ul>
+    {{ else }}<p class="muted">To be added.</p>{{ end }}
+  </section>
+
+  {{ with .Params.biorxiv }}
+  <section id="preprints" class="outputs">
+    <h3>Preprints (bioRxiv)</h3>
+    <ul>{{ range . }}<li><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+
+  {{ with .Params.posters }}
+  <section id="presentations" class="outputs">
+    <h3>Poster presentations</h3>
+    <ul>{{ range . }}<li><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+
+  {{ partial "research_list_simple.html" (dict "current" . "posts" (where .Site.RegularPages "Section" "research")) }}
+  {{ partial "comments.html" . }}
+</main>
+
+<style>
+.hero img{ width:100%; height:auto; border-radius:12px; display:block; margin-bottom:12px; }
+.no-save{ user-select:none; -webkit-user-drag:none; }
+.meta{ color:#777; margin-bottom:.5rem; }
+.content-body img{ max-width:100%; height:auto; }
+
+.outputs{ margin-top:1.25rem; }
+.outputs h3{ margin:.25rem 0 .5rem; }
+.outputs ul{ margin:0 0 .5rem 1.1rem; }
+.outputs .muted{ color:#888; font-size:.95rem; }
+</style>
+{{ end }}
+

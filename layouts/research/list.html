@@ -1,0 +1,112 @@
+{{ define "main" }}
+<main class="container" style="padding: 1rem 0;">
+  <h1 class="page-title">{{ .Title }}</h1>
+  {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+  {{ with .Content }}<div class="section-intro">{{ . }}</div>{{ end }}
+
+  <div class="research-list">
+    {{ range .Paginator.Pages }}
+      {{/* --- thumbnail URL (square) --- */}}
+      {{ $thumb := .Params.thumbnail }}
+      {{ if not $thumb }}{{ with .Params.images }}{{ $thumb = index . 0 }}{{ end }}{{ end }}
+      {{ $thumbURL := "" }}
+      {{ if $thumb }}
+        {{ $res := .Resources.GetMatch $thumb }}
+        {{ if $res }}
+          {{ with ($res.Fill "600x600 center") }}{{ $thumbURL = .RelPermalink }}{{ end }}
+        {{ else }}
+          {{ $thumbURL = ($thumb | relURL) }}
+        {{ end }}
+      {{ end }}
+
+      <article class="research-card">
+        <a class="thumb" href="{{ .RelPermalink }}" aria-label="{{ .Title | plainify }}" oncontextmenu="return false">
+          <div class="thumb-img" role="img" aria-label="{{ .Title | plainify }}"
+               style="background-image:url('{{ $thumbURL }}');"></div>
+        </a>
+
+        <div class="info">
+          <h2 class="title"><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></h2>
+          <div class="meta">
+            <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
+            {{ with .Params.status }} · <span class="status">{{ . }}</span>{{ end }}
+          </div>
+
+          <div class="summary">
+            {{/* --- use ONLY card/front-matter summaries, never .Content --- */}}
+            {{ with .Params.card_summary }}
+              {{ . | markdownify }}
+            {{ else }}
+              {{ with .Params.summary }}
+                {{ . | markdownify }}
+              {{ else }}
+                {{ with .Summary }}{{ . | safeHTML }}{{ else }}{{ .Plain | truncate 200 }}{{ end }}
+              {{ end }}
+            {{ end }}
+          </div>
+
+          <div class="links">
+            <a class="readmore" href="{{ .RelPermalink }}">Read more →</a>
+            <a class="ext" href="{{ .RelPermalink }}#papers">Papers</a>
+            <a class="ext" href="{{ .RelPermalink }}#resources">Software &amp; Data</a>
+
+            {{ $pre := .Params.biorxiv }}
+            {{ if $pre }}
+              {{ if eq (len $pre) 1 }}
+                <a class="ext" href="{{ index $pre 0 }}" target="_blank" rel="noopener">bioRxiv</a>
+              {{ else }}
+                <a class="ext" href="{{ .RelPermalink }}#preprints">bioRxiv</a>
+              {{ end }}
+            {{ end }}
+
+            {{ with .Params.posters }}
+              <a class="ext" href="{{ $.RelPermalink }}#presentations">Poster presentations</a>
+            {{ end }}
+          </div>
+        </div>
+      </article>
+    {{ end }}
+  </div>
+
+  {{ partial "pagination.html" . }}
+</main>
+
+<style>
+/* one card per row, full width */
+.research-list{ display:flex; flex-direction:column; gap:18px; }
+
+/* card frame */
+.research-card{
+  width:100%;
+  display:grid;
+  grid-template-columns:168px 1fr; /* square thumb | content */
+  gap:14px;
+  padding:12px;
+  border:1px solid #eee; border-radius:12px; background:#fff;
+  align-items:start;
+}
+
+/* square thumbnail as CSS background (discourages direct saving) */
+.research-card .thumb{ display:block; user-select:none; -webkit-user-drag:none; }
+.research-card .thumb-img{
+  width:100%; aspect-ratio:1/1; background-size:cover; background-position:center; border-radius:8px;
+}
+
+/* text column */
+.research-card .info{ min-width:0; display:flex; flex-direction:column; }
+.research-card .title{ margin:.1rem 0 .25rem; font-size:1.88rem; line-height:1.25; }
+.research-card .title a{ text-decoration: underline; text-underline-offset: 2px; color: inherit; }
+.research-card .meta{ color:#777; font-size:1.25rem; margin:0 0 .3rem 0; }
+.research-card .summary{ font-size:1.35rem; line-height:1.55; margin:0 0 .5rem 0; }
+.research-card .summary p{ margin:.2rem 0; }
+
+/* link row */
+.research-card .links a{ margin-right:.9rem; font-size:1.25rem; color:#1d4ed8; text-decoration:none; }
+.research-card .links a:hover{ text-decoration: underline; }
+
+/* mobile */
+@media (max-width:700px){
+  .research-card{ grid-template-columns:1fr; }
+}
+</style>
+{{ end }}

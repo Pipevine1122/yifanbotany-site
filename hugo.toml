@@ -71,7 +71,8 @@ home = ["HTML", "RSS", "Algolia"]
   reward = true 
   # reward_guide = "如果这篇文章对你有用,请随意打赏" 
 
-  friends = true
+  home_labs       = true
+  home_labs_title = "Home Labs & Training"
   bookmarks = false
   about_me = true
 
@@ -89,9 +90,9 @@ home = ["HTML", "RSS", "Algolia"]
   instagram      = "https://www.instagram.com/yfw_evan1122/?hl=en"
   # wechat         = "your wechat qr code image"
   
-  [[params.friend_link]]
-  title = "Onyenedum Lab"
-  href =  "https://onyenedumlab.com/"
+  [[params.home_labs_link]]
+  title = "Onyenedum Lab ｜ NYU"
+  href  = "https://onyenedumlab.com/"
 
   [[params.bookmark_link]]
   title =  "Martin Fowler"

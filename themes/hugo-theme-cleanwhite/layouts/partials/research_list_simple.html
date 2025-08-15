@@ -1,0 +1,104 @@
+{{ define "main" }}
+<main class="research-container">
+  <h1 class="page-title">{{ .Title }}</h1>
+  {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+  {{ with .Content }}<div class="section-intro">{{ . }}</div>{{ end }}
+
+  <div class="research-list">
+    {{ range .Paginator.Pages }}
+      <article class="research-card">
+        <a class="thumb" href="{{ .RelPermalink }}">
+          {{/* thumbnail: thumbnail -> images[0] -> fallback */}}
+          {{ $thumb := .Params.thumbnail }}
+          {{ if not $thumb }}{{ with .Params.images }}{{ $thumb = index . 0 }}{{ end }}{{ end }}
+          {{ if $thumb }}
+            {{ $img := .Resources.GetMatch $thumb }}
+            {{ if $img }}
+              {{ with ($img.Fill "800x500 center") }}
+                <img src="{{ .RelPermalink }}" alt="{{ $.Title }}">
+              {{ end }}
+            {{ else }}
+              <img src="{{ $thumb | relURL }}" alt="{{ .Title }}">
+            {{ end }}
+          {{ else }}
+            <img src="{{ "img/default-thumb.png" | relURL }}" alt="{{ .Title }}">
+          {{ end }}
+        </a>
+
+        <div class="info">
+          <h2 class="title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          <div class="meta">
+            <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
+            {{ with .Params.status }} · <span class="status">{{ . }}</span>{{ end }}
+          </div>
+          <p class="summary">
+            {{ with .Summary }}{{ . | plainify }}{{ else }}{{ .Plain | truncate 200 }}{{ end }}
+          </p>
+          <div class="links">
+            <a class="readmore" href="{{ .RelPermalink }}">Read more →</a>
+            {{ with .Params.repo }}<a class="ext" href="{{ . }}" target="_blank" rel="noopener">Code</a>{{ end }}
+            {{ with .Params.paper }}<a class="ext" href="{{ . }}" target="_blank" rel="noopener">Paper</a>{{ end }}
+          </div>
+        </div>
+      </article>
+    {{ end }}
+  </div>
+
+  {{ partial "pagination.html" . }}
+</main>
+
+<style>
+/* full-width but nicely centered */
+.research-container{
+  max-width: 1100px;      /* widen the page */
+  margin: 1rem auto 2rem; /* center */
+  padding: 0 16px;
+}
+
+/* one card per row */
+.research-list{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.research-card{
+  width: 100%;                       /* take full row */
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* left image fixed size, right text flexes */
+.research-card .thumb{
+  flex: 0 0 320px;                   /* fixed thumbnail column */
+  max-width: 320px;
+}
+.research-card .thumb img{
+  width: 100%;
+  height: 200px;                     /* consistent card height */
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+.research-card .info{
+  flex: 1 1 auto;
+  min-width: 0;                      /* allow text wrap */
+}
+.research-card .title{ margin: .1rem 0 .35rem 0; font-size: 1.25rem; }
+.research-card .meta{ color:#777; font-size:.92rem; margin-bottom:.35rem; }
+.research-card .summary{ margin:.25rem 0 .6rem 0; color:#444; line-height:1.6; }
+.research-card .links a{ margin-right: .9rem; font-size:.95rem; }
+
+/* mobile: stack vertical */
+@media (max-width: 700px){
+  .research-card{ flex-direction: column; }
+  .research-card .thumb{ flex: 0 0 auto; max-width: 100%; }
+  .research-card .thumb img{ height: 180px; }
+}
+</style>
+{{ end }}
