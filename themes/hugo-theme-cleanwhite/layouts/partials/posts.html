@@ -1,17 +1,53 @@
 <div data-pagefind-ignore="all" class="container">
-    <div class="row">
-        <!-- USE SIDEBAR -->
-        <!-- Post Container -->
-   	    <div class="
-            col-lg-8 col-lg-offset-1
-            col-md-8 col-md-offset-1
-            col-sm-12
-            col-xs-12
-            post-container
-        ">
-            {{ partial "post_list.html" . }}
-            {{ partial "pagination.html" . }}
-       	</div>
-        {{ partial "sidebar.html" . }}
-	</div>
+  <div class="row">
+    <!-- Main (left column) -->
+    <div class="
+      col-lg-8 col-lg-offset-1
+      col-md-8 col-md-offset-1
+      col-sm-12
+      col-xs-12
+      post-container">
+
+      <!-- 0) 首页标题（来自 content/_index.md 的 title） -->
+      {{ with .Title }}
+        <h1 class="home-title" style="margin:0 0 .6rem 0; font-size:4.2rem; line-height:1.2;">
+          {{ . }}
+        </h1>
+      {{ end }}
+
+      <!-- A) 正文（只在这里渲染一次） -->
+      {{ with .Content }}
+        <div class="home-intro" style="margin-bottom:1.25rem;">
+          {{ . }}
+        </div>
+      {{ end }}
+
+      <!-- B) 海报 + caption（保持原比例） -->
+      {{ with .Params.poster_image }}
+        {{ $src := . | relURL }}
+        <div class="home-hero" style="margin:1.5rem 0 .75rem 0;">
+          <div oncontextmenu="return false">
+            <img
+              src="{{ $src }}"
+              alt="{{ $.Params.poster_alt }}"
+              class="home-poster"
+              draggable="false"
+              style="display:block;max-width:100%;height:auto;margin:0 auto;-webkit-user-drag:none;user-select:none;" />
+          </div>
+          {{ with $.Params.poster_caption_html }}
+            <div class="home-caption" style="max-width:100%;margin-top:.75rem;">
+              {{ . | safeHTML }}
+            </div>
+          {{ end }}
+        </div>
+      {{ end }}
+
+      <!-- C) 文章列表 + 分页 -->
+      {{ partial "post_list.html" . }}
+      {{ partial "pagination.html" . }}
+    </div>
+
+    <!-- Sidebar (right column) -->
+    {{ partial "sidebar.html" . }}
+  </div>
 </div>

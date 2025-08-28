@@ -1,7 +1,8 @@
 +++
-title = "Systematics & Phylogenomics of the Pipevine (Genus *Aristolochia*)"
+title = "Macro Evolution & Phylogenomics of the Pipevine (Genus *Aristolochia*)"
 date = 2025-06-15
 draft = false
+disable_detail = false
 
 # taxonomy
 tags = ["research", "systematics", "phylogenomics", "Aristolochia", "Siphisia"]

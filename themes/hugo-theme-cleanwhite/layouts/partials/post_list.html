@@ -30,16 +30,12 @@
 
 {{ else }}
 
-  <!-- No posts: render home welcome inside the SAME column -->
+  <!-- No posts: only keep the bottom quick links; title/content are rendered in posts.html -->
   <article class="post-preview">
-    <h1 class="post-title">{{ with .Title }}{{ . }}{{ else }}Welcome{{ end }}</h1>
-    {{ with .Content }}
-      <div class="post-content">{{ . }}</div>
-    {{ else }}
-      <p class="post-subtitle">Welcome to my portfolio and research site.</p>
-    {{ end }}
     <p class="post-meta">
+      <a href="/cv/">CV</a> ·
       <a href="/publications/">Publications</a> ·
+      <a href="/research/">Research</a> ·
       <a href="/gallery/">Gallery</a> ·
       <a href="/album/">Album</a> ·
       <a href="/about/">About</a>
@@ -47,5 +43,6 @@
   </article>
 
 {{ end }}
+
 </div>
 

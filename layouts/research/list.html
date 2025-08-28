@@ -6,6 +6,12 @@
 
   <div class="research-list">
     {{ range .Paginator.Pages }}
+
+      {{/* clickability toggles */}}
+      {{ $globalOff := .Site.Params.research_disable_links | default false }}
+      {{ $pageOff   := .Params.disable_detail           | default false }}
+      {{ $click     := not (or $globalOff $pageOff) }}
+
       {{/* --- thumbnail URL (square) --- */}}
       {{ $thumb := .Params.thumbnail }}
       {{ if not $thumb }}{{ with .Params.images }}{{ $thumb = index . 0 }}{{ end }}{{ end }}
@@ -20,13 +26,28 @@
       {{ end }}
 
       <article class="research-card">
-        <a class="thumb" href="{{ .RelPermalink }}" aria-label="{{ .Title | plainify }}" oncontextmenu="return false">
-          <div class="thumb-img" role="img" aria-label="{{ .Title | plainify }}"
-               style="background-image:url('{{ $thumbURL }}');"></div>
-        </a>
+
+        {{ if $click }}
+          <a class="thumb" href="{{ .RelPermalink }}" aria-label="{{ .Title | plainify }}" oncontextmenu="return false">
+            <div class="thumb-img" role="img" aria-label="{{ .Title | plainify }}"
+                 style="background-image:url('{{ $thumbURL }}');"></div>
+          </a>
+        {{ else }}
+          <div class="thumb is-disabled" aria-disabled="true" title="Details temporarily unavailable">
+            <div class="thumb-img" role="img" aria-label="{{ .Title | plainify }}"
+                 style="background-image:url('{{ $thumbURL }}');"></div>
+          </div>
+        {{ end }}
 
         <div class="info">
-          <h2 class="title"><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></h2>
+          <h2 class="title">
+            {{ if $click }}
+              <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+            {{ else }}
+              <span class="nolink">{{ .Title | markdownify }}</span>
+            {{ end }}
+          </h2>
+
           <div class="meta">
             <time datetime="{{ .Date }}">{{ .Date.Format "2006-01-02" }}</time>
             {{ with .Params.status }} · <span class="status">{{ . }}</span>{{ end }}
@@ -46,16 +67,26 @@
           </div>
 
           <div class="links">
-            <a class="readmore" href="{{ .RelPermalink }}">Read more →</a>
-            <a class="ext" href="{{ .RelPermalink }}#papers">Papers</a>
-            <a class="ext" href="{{ .RelPermalink }}#resources">Software &amp; Data</a>
+            {{ if $click }}
+              <a class="readmore" href="{{ .RelPermalink }}">Read more →</a>
+              <a class="ext" href="{{ .RelPermalink }}#papers">Papers</a>
+              <a class="ext" href="{{ .RelPermalink }}#resources">Software &amp; Data</a>
+            {{ else }}
+              <span class="readmore disabled" aria-disabled="true">Read more →</span>
+              <span class="ext disabled" aria-disabled="true">Papers</span>
+              <span class="ext disabled" aria-disabled="true">Software &amp; Data</span>
+            {{ end }}
 
             {{ $pre := .Params.biorxiv }}
             {{ if $pre }}
               {{ if eq (len $pre) 1 }}
                 <a class="ext" href="{{ index $pre 0 }}" target="_blank" rel="noopener">bioRxiv</a>
               {{ else }}
-                <a class="ext" href="{{ .RelPermalink }}#preprints">bioRxiv</a>
+                {{ if $click }}
+                  <a class="ext" href="{{ .RelPermalink }}#preprints">bioRxiv</a>
+                {{ else }}
+                  <a class="ext" href="{{ index $pre 0 }}" target="_blank" rel="noopener">bioRxiv</a>
+                {{ end }}
               {{ end }}
             {{ end }}
 
@@ -104,9 +135,14 @@
 .research-card .links a{ margin-right:.9rem; font-size:1.25rem; color:#1d4ed8; text-decoration:none; }
 .research-card .links a:hover{ text-decoration: underline; }
 
+/* disabled look (only two tiny rules added) */
+.research-card .links .disabled{ color:#9aa0a6; cursor:not-allowed; margin-right:.9rem; }
+.thumb.is-disabled{ pointer-events:none; user-select:none; -webkit-user-drag:none; }
+
 /* mobile */
 @media (max-width:700px){
   .research-card{ grid-template-columns:1fr; }
 }
 </style>
 {{ end }}
+

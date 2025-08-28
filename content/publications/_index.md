@@ -9,7 +9,7 @@ menu:
   <li>
     <strong>Wang, Y.F.</strong>, Liao, S., Guo, Z.R., Li, P., Huang, Y.S., Onyenedum, J.G. (2025).
     Phylogenomics of <i>Aristolochia</i> subg. <i>Siphisia</i> (Aristolochiaceae) reveals widespread incomplete lineage sorting and supports a novel pollinator-filtering hypothesis.
-    Manuscript revision.
+    Manuscript under revision.
     Preprint: <a href="https://doi.org/10.1101/2025.05.29.656634" target="_blank" rel="noopener">https://doi.org/10.1101/2025.05.29.656634</a>.
   </li>
 
