@@ -20,7 +20,7 @@ poster_caption_html: |
     37. <i>A. petelotii</i>; 38. <i>A. wenshanensis</i>; 39. <i>A. caulialata</i>;
     40. <i>A. xingningensis</i> sp. nov.; 41. <i>A. gongchengensis</i>; 42. <i>A. neolongifolia</i>;
     43. <i>A. forrestiana</i>; 44. <i>A. pilosistyla</i>; 45. <i>Aristolochia</i> sp. nov.;
-    46. <i>A. fangchi</i>; 47. <i>A. kunmingensis</i>; 48. <i>A. geantha</i>; 49. <i>A. utriformis</i>.
+    46. <i>A. fangchi</i>; 47. <i>A. kunmingensis</i>; 48. <i>A. geantha</i>; 49. <i>A. utriformis</i>. All rights reserved.
   </p>
 ---
 
