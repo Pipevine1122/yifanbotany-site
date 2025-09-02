@@ -12,8 +12,15 @@
 <main class="container about-content">
 
   {{ if $banner }}
-    <div class="about-banner">
-      <img src="{{ $banner.RelPermalink }}" alt="{{ $alt }}">
+    <div
+      class="about-banner no-save"
+      role="img"
+      aria-label="{{ $alt }}"
+      style="--w: {{ $banner.Width }}; --h: {{ $banner.Height }}; background-image:url('{{ $banner.RelPermalink }}');"
+      oncontextmenu="return false"
+    >
+      <!-- Fallback for no-JS (hidden by CSS); still non-draggable -->
+      <noscript><img src="{{ $banner.RelPermalink }}" alt="{{ $alt }}" draggable="false"></noscript>
     </div>
   {{ end }}
 
@@ -27,19 +34,38 @@
 
 <style>
 .about-content { padding-top: 1.25rem; padding-bottom: 2.5rem; }
-.about-banner {
-  margin-bottom: 1.25rem;
+
+.about-banner.no-save{
+  position: relative;
+  width: 100%;           /* match container width */
+  margin: 0 0 1.25rem 0;
+  aspect-ratio: var(--w) / var(--h);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
 }
-.about-banner img {
-  display: block;
-  width: 56%;          /* match container width */
-  height: auto;         /* keep full height, no crop */
-  object-fit: contain;  /* show entire image */
-  margin: 0 auto;       /* center horizontally */
+.about-banner.no-save::after{
+  /* Transparent overlay blocks right-click/long-press */
+  content: "";
+  position: absolute; inset: 0;
 }
+.about-banner.no-save img{ display: none; }
+
 .page-title { margin: 0 0 .25rem 0; }
 .subtitle { margin: 0 0 1rem 0; color: #666; }
 .content-body img { max-width: 100%; height: auto; }
 </style>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var el = document.querySelector('.about-banner.no-save');
+    if (!el) return;
+    el.addEventListener('dragstart', function(e){ e.preventDefault(); });
+  });
+</script>
+
 {{ end }}
+
