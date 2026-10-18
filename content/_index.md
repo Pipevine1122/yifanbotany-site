@@ -1,10 +1,10 @@
 ---
 title: "Welcome!"
 poster_image: "img/posters/2.png"
-poster_alt: "Siphisiaposter"
+poster_alt: "Floral diversity of Aristolochia subgenus Siphisia, showing 49 numbered flowers"
 # 海报不再强制比例：不写 poster_aspect，让模板按图片原尺寸自适应
 poster_caption_html: |
-  <p style="font-size:1.25rem; text-align:justify; text-justify:inter-word; line-height:1.6; margin:0;">
+  <p>
     1. <i>A. haimingii</i>; 2. <i>A. plagiostoma</i>; 3. <i>A. cangshanensis</i>;
     4. <i>A. westlandii</i>; 5. <i>A. nitida</i> sp. nov.; 6. <i>A. pseudoutriformis</i>;
     7. <i>A. bambusifolia</i>; 8. <i>A. cucurbitoides</i>; 9. <i>A. melanocephala</i>;

@@ -1,0 +1,7 @@
+{{- $image := .Page.Resources.GetMatch .Destination -}}
+{{- if not $image }}{{ $image = resources.Get (strings.TrimPrefix "/" .Destination) }}{{ end -}}
+{{- with $image -}}
+  {{ partial "image.html" (dict "image" . "alt" $.Text "width" 1200) }}
+{{- else -}}
+  {{- errorf "Missing local image %q in %s; add it to the page bundle or assets directory" .Destination .Page.File.Path -}}
+{{- end -}}

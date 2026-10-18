@@ -1,0 +1,34 @@
+# Add entries here; the template groups and sorts by year.
+[[items]]
+year = 2025
+authors = "**Wang, Y.F.**, Liao, S., Guo, Z.R., Li, P., Huang, Y.S., Onyenedum, J.G."
+title = "Phylogenomics of *Aristolochia* subg. *Siphisia* (Aristolochiaceae) reveals widespread incomplete lineage sorting and supports a novel pollinator-filtering hypothesis."
+status = "Manuscript under revision"
+doi = "https://doi.org/10.1101/2025.05.29.656634"
+link_label = "Read preprint"
+[[items]]
+year = 2025
+authors = "Guo, Z.R., **Wang, Y.F.**, Onyenedum, J.G., Li, J."
+title = "*Aristolochia geantha* (Aristolochiaceae), a new species from Yunnan, China."
+journal = "Taiwania"
+volume = "70: 293–300"
+doi = "https://doi.org/10.6165/tai.2025.70.293"
+link_label = "Read paper"
+cover = "img/covers/taiwania2025.png"
+cover_alt = "Taiwania cover featuring Aristolochia geantha"
+[[items]]
+year = 2025
+authors = "**Wang, Y.F.**, Guo, Z.R., Landrein, S., Onyenedum, J.G., Liao, S."
+title = "*Aristolochia zhuhaiensis*, a self-supporting new species of Aristolochiaceae from Guangdong, China, and notes on *Aristolochia thwaitesii*."
+journal = "PhytoKeys"
+volume = "254: 61–76"
+doi = "https://doi.org/10.3897/phytokeys.254.139616"
+link_label = "Read paper"
+[[items]]
+year = 2024
+authors = "Zhang, H.L., **Wang, Y.F.**, Guo, Z.R., Zhu, T., Yang, H.H., Yin, Z.J."
+title = "*Aristolochia pulvinata*, a new species of Aristolochiaceae from Yunnan, Southwest China."
+journal = "Phytotaxa"
+volume = "675: 261–272"
+doi = "https://doi.org/10.11646/phytotaxa.675.3.5"
+link_label = "Read paper"

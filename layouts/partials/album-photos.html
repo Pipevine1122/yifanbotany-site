@@ -1,0 +1,4 @@
+{{ range .Resources.ByType "image" }}
+  {{ $key := path.BaseName .Name }}{{ $caption := index $.Params.captions $key | default ($key | humanize) }}
+  <figure class="album-photo">{{ partial "image-link.html" (dict "image" . "alt" $caption "width" 1200 "sizes" "(max-width: 700px) calc(100vw - 40px), 560px") }}<figcaption>{{ $caption | markdownify }}</figcaption></figure>
+{{ end }}

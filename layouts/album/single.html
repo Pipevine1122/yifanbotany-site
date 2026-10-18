@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="wrap page-shell">
+  <a class="back-link" href="{{ "news/" | relURL }}">All news</a>
+  {{ partial "page-heading.html" . }}
+  <div class="photo-archive">{{ partial "album-photos.html" . }}</div>
+</div>
+{{ end }}

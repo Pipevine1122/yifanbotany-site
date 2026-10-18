@@ -1,0 +1,10 @@
+# Add confirmed teaching assignments here. No courses or office hours are invented.
+# [[courses]]
+# code = ""
+# title = ""
+# term = ""
+# role = "Teaching assistant"
+# url = ""
+# office_hours = ""
+# location = ""
+courses = []

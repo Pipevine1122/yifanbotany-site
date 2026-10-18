@@ -1,0 +1,4 @@
+<header class="page-heading">
+  <h1>{{ .Title | markdownify }}</h1>
+  {{ with .Params.subtitle }}<p class="lede">{{ . }}</p>{{ end }}
+</header>

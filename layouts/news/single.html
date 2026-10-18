@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="wrap page-shell narrow">
+  <a class="back-link" href="{{ "news/" | relURL }}">All news</a>
+  {{ if not .Date.IsZero }}<p class="news-date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time></p>{{ end }}
+  <h1>{{ .Title }}</h1><article class="prose">{{ .Content }}</article>
+</div>
+{{ end }}

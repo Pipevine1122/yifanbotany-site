@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="{{ site.Language.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Page.Title }} | {{ site.Title }}</title>
+  <meta name="description" content="{{ .Page.Description | default site.Params.description }}">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <meta http-equiv="refresh" content="0; url={{ .Page.RelPermalink }}">
+</head>
+<body><main><h1>{{ .Page.Title }}</h1><p><a href="{{ .Page.RelPermalink }}">Continue to {{ .Page.Title }}</a></p></main></body>
+</html>

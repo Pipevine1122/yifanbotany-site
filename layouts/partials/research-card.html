@@ -1,0 +1,16 @@
+{{ $project := .page }}
+{{ $heading := .heading | default "h3" }}
+<article class="research-card" id="{{ $project.File.ContentBaseName | urlize }}">
+  {{ with $project.Resources.GetMatch $project.Params.thumbnail }}{{ partial "image.html" (dict "image" . "alt" $project.Title "width" 720 "sizes" "(max-width: 700px) calc(100vw - 40px), 280px") }}{{ end }}
+  <div>
+    {{ printf "<%s>" $heading | safeHTML }}{{ if $project.Params.details_ready }}<a href="{{ $project.RelPermalink }}">{{ $project.Title | markdownify }}</a>{{ else }}{{ $project.Title | markdownify }}{{ end }}{{ printf "</%s>" $heading | safeHTML }}
+    <div class="prose">{{ $project.Params.card_summary | default $project.Summary | markdownify }}</div>
+    <ul class="link-list project-links">
+      {{ if $project.Params.details_ready }}<li><a href="{{ $project.RelPermalink }}">Read more</a></li>{{ end }}
+      {{ range $project.Params.biorxiv }}<li><a href="{{ . }}">Preprint</a></li>{{ end }}
+      {{ with $project.Params.paper }}<li><a href="{{ . }}">Paper</a></li>{{ end }}
+      {{ with $project.Params.repo }}<li><a href="{{ . }}">Code</a></li>{{ end }}
+      {{ range $project.Params.posters }}<li><a href="{{ . }}">Poster</a></li>{{ end }}
+    </ul>
+  </div>
+</article>

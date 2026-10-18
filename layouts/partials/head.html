@@ -1,0 +1,28 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ $title := printf "%s | %s" (.Title | markdownify | plainify | htmlUnescape) site.Title }}
+  {{ if .IsHome }}{{ $title = site.Title }}{{ end }}
+  {{ $description := .Description | default site.Params.description }}
+  <title>{{ $title }}</title>
+  <meta name="description" content="{{ $description }}">
+  <meta name="author" content="{{ site.Params.author }}">
+  <meta name="theme-color" content="#203e34">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ if or .Params.noindex (eq .Kind "404") }}<meta name="robots" content="noindex, follow">{{ end }}
+  <meta property="og:site_name" content="{{ site.Title }}">
+  <meta property="og:title" content="{{ $title }}">
+  <meta property="og:description" content="{{ $description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Permalink }}">
+  {{ $image := resources.Get site.Params.header_image }}
+  {{ with .Params.thumbnail }}{{ with $.Resources.GetMatch . }}{{ $image = . }}{{ end }}{{ end }}
+  {{ with $image.Fit "1200x630 jpg q85" }}
+    <meta property="og:image" content="{{ .Permalink }}">
+    <meta name="twitter:image" content="{{ .Permalink }}">
+  {{ end }}
+  <meta name="twitter:card" content="summary_large_image">
+  {{ with (resources.Get "img/geantha.png").Fit "64x64 png" }}<link rel="icon" type="image/png" href="{{ .RelPermalink }}">{{ end }}
+  <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "index.xml" | relURL }}">
+  {{ with resources.Get "css/site.css" | minify | fingerprint }}<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">{{ end }}
+</head>

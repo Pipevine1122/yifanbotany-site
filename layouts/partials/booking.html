@@ -1,0 +1,41 @@
+{{ $booking := site.Data.booking }}
+{{ $id := .id }}
+{{ if and $booking.enabled (or (not $booking.url) (not $booking.embed_url)) }}{{ errorf "Enabled booking needs public and inline embed URLs in data/booking.toml" }}{{ end }}
+{{ if ne $booking.confirmation "manual" }}{{ errorf "Booking must retain manual confirmation" }}{{ end }}
+<section class="booking{{ if .compact }} booking-compact{{ end }}" aria-label="Meeting calendar">
+  {{ if $booking.enabled }}
+    <iframe class="booking-frame" src="{{ $booking.embed_url }}" title="Choose a meeting time with Yifan Wang" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <p class="booking-note">I’ll confirm your request by email. <a href="{{ $booking.url }}" target="_blank" rel="noopener">Open calendar</a></p>
+  {{ else }}
+    <p class="booking-note">Suggest a time by email.</p>
+    <div class="booking-request" data-booking data-email="{{ site.Params.email }}" data-timezone="{{ $booking.timezone }}" data-workspace="{{ $booking.workspace }}" hidden>
+      <div class="calendar-picker">
+        <div class="calendar-heading">
+          <button type="button" class="calendar-prev" aria-label="Previous month">‹</button>
+          <p class="calendar-month" id="{{ $id }}-month" aria-live="polite"></p>
+          <button type="button" class="calendar-next" aria-label="Next month">›</button>
+        </div>
+        <div class="calendar-weekdays" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+        <div class="calendar-days" role="group" aria-labelledby="{{ $id }}-month"></div>
+        <p class="calendar-zone">Times in {{ $booking.timezone }}</p>
+      </div>
+      <form class="booking-form" hidden>
+        <h3 class="booking-date" tabindex="-1"></h3>
+        <label for="{{ $id }}-time">Preferred time</label>
+        <input id="{{ $id }}-time" name="time" type="time" required>
+        <fieldset class="meeting-format">
+          <legend>How shall we meet?</legend>
+          <label><input type="radio" name="format" value="in-person" required> In person</label>
+          <label><input type="radio" name="format" value="zoom" required> Zoom</label>
+        </fieldset>
+        <p class="meeting-format-note" aria-live="polite" hidden></p>
+        <label for="{{ $id }}-topic">What’s on your mind?</label>
+        <textarea id="{{ $id }}-topic" name="topic" rows="3" maxlength="1200" required></textarea>
+        <button class="button" type="submit">Request by email</button>
+        <p class="booking-note">Opens your email app. I’ll reply to confirm.</p>
+        <p class="booking-feedback" role="status"></p>
+      </form>
+    </div>
+    <noscript><p><a href="mailto:{{ site.Params.email }}?subject=Meeting%20request">Email me to suggest a time</a></p></noscript>
+  {{ end }}
+</section>

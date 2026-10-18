@@ -1,0 +1,7 @@
+{{ define "main" }}
+<div class="wrap page-shell narrow">
+  {{ partial "page-heading.html" . }}
+  <p class="meeting-location"><span>Workspace</span> {{ site.Data.booking.workspace }}</p>
+  {{ partial "booking.html" (dict "id" "meeting-booking" "compact" false) }}
+</div>
+{{ end }}

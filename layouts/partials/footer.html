@@ -1,0 +1,9 @@
+<footer class="site-footer"><div class="wrap footer-inner">
+  <div><a class="brand" href="{{ site.Home.RelPermalink }}">{{ site.Params.author }}</a><p>© {{ now.Year }} {{ site.Params.author }}. All rights reserved.</p></div>
+  <nav aria-label="Social links"><ul class="link-list">
+    <li><a href="mailto:{{ site.Params.email }}">Email</a></li>
+    {{ range site.Data.profile.academic }}<li><a href="{{ .url }}">{{ .name }}</a></li>{{ end }}
+    {{ range site.Data.profile.social }}<li><a href="{{ .url }}" rel="me">{{ .name }}</a></li>{{ end }}
+    <li><a href="{{ "index.xml" | relURL }}">RSS</a></li>
+  </ul></nav>
+</div></footer>

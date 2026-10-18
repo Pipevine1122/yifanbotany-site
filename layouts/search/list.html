@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="wrap page-shell narrow">
+  {{ partial "page-heading.html" . }}
+  <form class="search-form" role="search" data-index="{{ "index.json" | relURL }}">
+    <label for="search-query">Search this site</label>
+    <div class="search-controls"><input id="search-query" name="q" type="search" placeholder="What are you looking for?" autocomplete="off" maxlength="200"><button class="button" type="submit">Search</button></div>
+  </form>
+  <p id="search-status" role="status" aria-live="polite"></p>
+  <ol id="search-results" class="search-results"></ol>
+  <noscript><p>Search needs JavaScript. Browse the <a href="{{ "research/" | relURL }}">research</a>, <a href="{{ "publications/" | relURL }}">publications</a>, <a href="{{ "gallery/" | relURL }}">gallery</a>, or <a href="{{ "news/" | relURL }}">news</a> instead.</p></noscript>
+</div>
+{{ end }}

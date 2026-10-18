@@ -1,70 +1,64 @@
-name: Deploy Hugo site to Pages
+name: Validate and deploy Hugo
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DART_SASS_VERSION: 1.89.2
-      HUGO_VERSION: 0.148.0
       HUGO_ENVIRONMENT: production
     steps:
-      - name: Install Hugo CLI
+      - uses: actions/checkout@v4
+      - name: Install pinned Hugo
+        shell: bash
         run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
-          sudo dpkg -i ${{ runner.temp }}/hugo.deb
-
-      - name: Install Dart Sass
-        run: |
-          wget -O ${{ runner.temp }}/dart-sass.tar.gz https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz
-          tar -xf ${{ runner.temp }}/dart-sass.tar.gz --directory ${{ runner.temp }}
-          sudo mv ${{ runner.temp }}/dart-sass/ /usr/local/bin
-          echo "/usr/local/bin/dart-sass" >> $GITHUB_PATH
-
-      - name: Checkout
-        uses: actions/checkout@v4
+          version="$(cat .hugo-version)"
+          archive="hugo_extended_${version}_linux-amd64.tar.gz"
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/checksums.txt" "https://github.com/gohugoio/hugo/releases/download/v${version}/hugo_${version}_checksums.txt"
+          cd "$RUNNER_TEMP"
+          grep " $archive$" checksums.txt | sha256sum --check --strict
+          mkdir -p hugo-bin
+          tar -xzf "$archive" -C hugo-bin hugo
+          echo "$RUNNER_TEMP/hugo-bin" >> "$GITHUB_PATH"
+      - name: Cache processed images
+        uses: actions/cache@v4
         with:
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Build with Hugo
-        env:
-          HUGO_BASE_URL: ${{ steps.pages.outputs.base_url }}/
+          path: ${{ runner.temp }}/hugo-cache
+          key: hugo-${{ runner.os }}-${{ hashFiles('.hugo-version', 'hugo.toml', 'layouts/**', 'assets/img/**', 'content/**') }}
+          restore-keys: hugo-${{ runner.os }}-
+      - name: Build
         run: |
-          echo "Using baseURL: $HUGO_BASE_URL"
-          hugo --gc --minify --baseURL "$HUGO_BASE_URL" \
-               --cacheDir "${{ runner.temp }}/hugo_cache"
-
-      - name: Upload artifact
+          python3 scripts/check_config.py
+          hugo --gc --minify --cleanDestinationDir --panicOnWarning --cacheDir "$RUNNER_TEMP/hugo-cache"
+      - name: Check generated site
+        run: python3 scripts/check_site.py public
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
-
+          path: public
   deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4
-

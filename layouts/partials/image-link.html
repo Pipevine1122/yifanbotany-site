@@ -1,0 +1,4 @@
+{{- $large := .image.Fit "2200x2200 webp q90" -}}
+<a class="image-link" href="{{ $large.RelPermalink }}" data-lightbox aria-label="Enlarge: {{ .alt | markdownify | plainify | htmlUnescape }}">
+  {{ partial "image.html" . }}<span class="image-zoom" aria-hidden="true">View image</span>
+</a>

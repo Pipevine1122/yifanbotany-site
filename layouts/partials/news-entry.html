@@ -1,0 +1,11 @@
+<article class="news-entry">
+  <div class="news-copy">
+    {{ if and (not .Params.archive) (not .Date.IsZero) }}<time class="news-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>{{ end }}
+    <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    {{ if .Params.archive }}<p>{{ len (.Resources.ByType "image") }} photographs</p>{{ else }}{{ with .Summary }}<p>{{ . | plainify }}</p>{{ end }}{{ end }}
+  </div>
+  {{ $post := . }}
+  {{ with .Resources.GetMatch (.Params.thumbnail | default "cover.*") }}
+    <a class="news-thumbnail" href="{{ $post.RelPermalink }}" aria-label="{{ $post.Title }}">{{ partial "image.html" (dict "image" . "alt" ($post.Params.thumbnail_alt | default $post.Title) "width" 480 "sizes" "(max-width: 600px) 100px, 160px") }}</a>
+  {{ end }}
+</article>

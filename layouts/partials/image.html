@@ -1,0 +1,17 @@
+{{- /* Retain aspect ratio, never upscale, and always reserve layout space. */ -}}
+{{- $image := .image -}}
+{{- $width := math.Min (.width | default 1200) $image.Width | int -}}
+{{- $sizes := .sizes | default "(max-width: 700px) calc(100vw - 40px), 720px" -}}
+{{- $variants := slice -}}
+{{- range slice 320 480 720 960 1200 1600 2000 -}}
+  {{- if lt . $width -}}
+    {{- $variant := $image.Resize (printf "%dx webp q85" .) -}}
+    {{- $variants = $variants | append (printf "%s %dw" $variant.RelPermalink $variant.Width) -}}
+  {{- end -}}
+{{- end -}}
+{{- $largest := $image.Resize (printf "%dx webp q85" $width) -}}
+{{- $variants = $variants | append (printf "%s %dw" $largest.RelPermalink $largest.Width) -}}
+<img src="{{ $largest.RelPermalink }}" srcset="{{ delimit $variants ", " }}" sizes="{{ $sizes }}"
+  width="{{ $largest.Width }}" height="{{ $largest.Height }}" alt="{{ .alt | markdownify | plainify | htmlUnescape }}"
+  {{ with .class }}class="{{ . }}"{{ end }}
+  {{ if .eager }}loading="eager" fetchpriority="high"{{ else }}loading="lazy"{{ end }} decoding="async">

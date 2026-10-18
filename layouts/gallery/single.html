@@ -1,0 +1,19 @@
+{{ define "main" }}
+<div class="wrap page-shell">
+  {{ partial "page-heading.html" . }}
+  <div class="studio-intro">
+    {{ partial "image.html" (dict "image" (resources.Get "img/viola-crest.png") "alt" "Studio Viola crest" "width" 320 "sizes" "120px") }}
+    <div class="prose">{{ .Content }}</div>
+  </div>
+  {{ range .Params.sections }}
+    {{ $items := $.Resources.Match .match }}
+    {{ if $items }}<section class="gallery-section"><h2>{{ .title }}</h2><div class="art-grid">
+      {{ range $items }}
+        {{ $key := path.BaseName .Name }}{{ $caption := index $.Params.captions $key | default ($key | humanize) }}
+        <figure>{{ partial "image-link.html" (dict "image" . "alt" $caption "width" 960 "sizes" "(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 45vw, 350px") }}<figcaption>{{ $caption | markdownify }}</figcaption></figure>
+      {{ end }}
+    </div></section>{{ end }}
+  {{ end }}
+  <p class="studio-credit">{{ .Params.credit }}</p>
+</div>
+{{ end }}

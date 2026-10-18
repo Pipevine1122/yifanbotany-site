@@ -1,0 +1,4 @@
+{{ define "main" }}
+<div class="wrap page-shell">{{ partial "page-heading.html" . }}<div class="prose">{{ .Content }}</div>
+  <ul class="page-list">{{ range .Pages }}<li><a href="{{ if and (eq .Section "research") .IsPage (not .Params.details_ready) }}{{ "research/" | relURL }}#{{ .File.ContentBaseName | urlize }}{{ else }}{{ .RelPermalink }}{{ end }}">{{ .Title | markdownify }}</a></li>{{ end }}</ul>
+</div>{{ end }}

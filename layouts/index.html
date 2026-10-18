@@ -1,0 +1,28 @@
+{{ define "main" }}
+<section class="home-hero" aria-labelledby="home-title">
+  {{ partial "image.html" (dict "image" (resources.Get site.Params.header_image) "alt" "A collection of plants and flowers photographed in the field" "width" 2000 "sizes" "100vw" "eager" true "class" "hero-photo") }}
+  <div class="hero-copy wrap"><p class="eyebrow">The botanical journey of Yifan</p><h1 id="home-title">{{ site.Title }}</h1><p>{{ site.Params.slogan }}</p></div>
+</section>
+<div class="wrap home-layout">
+  <div class="home-content">
+    <header class="section-heading"><h2>{{ .Title }}</h2></header>
+    <div class="prose">{{ .Content }}</div>
+    <div class="home-links"><a class="button" href="{{ "research/" | relURL }}">Research &amp; ideas</a><a href="{{ "publications/" | relURL }}">Publications</a></div>
+    {{ range first 1 (where (where site.RegularPages "Section" "news") "Params.archive" "ne" true).ByDate.Reverse }}
+    <aside class="latest-update"><p class="eyebrow">Latest news · {{ .Date.Format "January 2006" }}</p><a href="{{ .RelPermalink }}">{{ .Title }}</a></aside>
+    {{ end }}
+    {{ with resources.Get .Params.poster_image }}
+    <figure class="home-poster">
+      {{ partial "image-link.html" (dict "image" . "alt" $.Params.poster_alt "width" 1600) }}
+      <figcaption><details><summary>Flower identification &amp; credits</summary><div class="poster-legend">{{ $.Params.poster_caption_html | safeHTML }}</div></details></figcaption>
+    </figure>{{ end }}
+  </div>
+  <aside class="profile" aria-label="About Yifan">
+    {{ partial "image.html" (dict "image" (resources.Get site.Params.avatar) "alt" "Yifan Wang" "width" 600 "sizes" "(max-width: 700px) 160px, 260px") }}
+    <h2>{{ site.Params.author }}</h2><p>{{ site.Params.role }}<br>{{ range $index, $affiliation := site.Data.profile.affiliations }}{{ if $index }}<br>{{ end }}<a href="{{ .url }}">{{ .name }}</a>{{ end }}</p><a href="{{ "about/" | relURL }}">About me</a>
+    <div class="profile-section"><h3>Previous labs &amp; training</h3><ul class="plain-list">{{ range site.Data.profile.training }}<li><a href="{{ .url }}">{{ .name }}</a></li>{{ end }}</ul></div>
+    <div class="profile-section"><ul class="plain-list">{{ range site.Data.profile.academic }}<li><a href="{{ .url }}">{{ .name }}</a></li>{{ end }}</ul></div>
+    <section class="profile-section home-calendar" aria-labelledby="home-calendar-title"><h2 id="home-calendar-title"><a href="{{ "meet/" | relURL }}">Let’s meet</a></h2>{{ partial "booking.html" (dict "id" "home-booking" "compact" true) }}</section>
+  </aside>
+</div>
+{{ end }}

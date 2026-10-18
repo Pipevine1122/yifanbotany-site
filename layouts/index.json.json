@@ -1,0 +1,15 @@
+{{- $entries := slice -}}
+{{- range site.Pages -}}
+  {{- if and (in (slice "page" "section" "home") .Kind) (not .Params.noindex) -}}
+    {{- $text := .Plain -}}
+    {{- range .Params.captions }}{{ $text = printf "%s %s" $text (. | markdownify | plainify | htmlUnescape) }}{{ end -}}
+    {{- if eq .Type "publications" -}}
+      {{- range site.Data.publications.items }}{{ $text = printf "%s %s %s %s" $text (.title | markdownify | plainify | htmlUnescape) (.authors | markdownify | plainify | htmlUnescape) (.journal | default .status) }}{{ end -}}
+    {{- end -}}
+    {{- if eq .Section "research" -}}
+      {{- range .RegularPages }}{{ $text = printf "%s %s %s" $text (.Title | markdownify | plainify | htmlUnescape) (.Params.card_summary | markdownify | plainify | htmlUnescape) }}{{ end -}}
+    {{- end -}}
+    {{- $entries = $entries | append (dict "title" (.Title | markdownify | plainify | htmlUnescape) "url" .RelPermalink "text" $text "section" (.Type | humanize)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $entries | jsonify -}}

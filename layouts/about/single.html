@@ -1,71 +1,7 @@
 {{ define "main" }}
-
-{{/* Resolve banner image */}}
-{{ $banner := cond (and .Params.banner (ne .Params.banner "")) (.Resources.GetMatch .Params.banner) nil }}
-{{ if not $banner }}
-  {{ $all := .Resources.ByType "image" }}
-  {{ if gt (len $all) 0 }}{{ $banner = index $all 0 }}{{ end }}
+<div class="wrap page-shell narrow">
+  {{ partial "page-heading.html" . }}
+  {{ with .Resources.GetMatch .Params.banner }}<figure class="about-banner">{{ partial "image.html" (dict "image" . "alt" $.Params.banner_alt "width" 1600 "sizes" "(max-width: 900px) calc(100vw - 40px), 860px" "eager" true) }}</figure>{{ end }}
+  <article class="prose">{{ .Content }}</article>
+</div>
 {{ end }}
-
-{{ $alt := or .Params.banner_alt .Title }}
-
-<main class="container about-content">
-
-  {{ if $banner }}
-    <div
-      class="about-banner no-save"
-      role="img"
-      aria-label="{{ $alt }}"
-      style="--w: {{ $banner.Width }}; --h: {{ $banner.Height }}; background-image:url('{{ $banner.RelPermalink }}');"
-      oncontextmenu="return false"
-    >
-      <!-- Fallback for no-JS (hidden by CSS); still non-draggable -->
-      <noscript><img src="{{ $banner.RelPermalink }}" alt="{{ $alt }}" draggable="false"></noscript>
-    </div>
-  {{ end }}
-
-  <h1 class="page-title">{{ .Title }}</h1>
-  {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
-  <div class="content-body">
-    {{ .Content }}
-  </div>
-
-</main>
-
-<style>
-.about-content { padding-top: 1.25rem; padding-bottom: 2.5rem; }
-
-.about-banner.no-save{
-  position: relative;
-  width: 100%;           /* match container width */
-  margin: 0 0 1.25rem 0;
-  aspect-ratio: var(--w) / var(--h);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  user-select: none;
-  -webkit-user-drag: none;
-  touch-action: none;
-}
-.about-banner.no-save::after{
-  /* Transparent overlay blocks right-click/long-press */
-  content: "";
-  position: absolute; inset: 0;
-}
-.about-banner.no-save img{ display: none; }
-
-.page-title { margin: 0 0 .25rem 0; }
-.subtitle { margin: 0 0 1rem 0; color: #666; }
-.content-body img { max-width: 100%; height: auto; }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var el = document.querySelector('.about-banner.no-save');
-    if (!el) return;
-    el.addEventListener('dragstart', function(e){ e.preventDefault(); });
-  });
-</script>
-
-{{ end }}
-

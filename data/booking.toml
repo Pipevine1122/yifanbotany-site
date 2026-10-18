@@ -1,0 +1,11 @@
+# One meeting calendar. Use the provider-generated inline embed URL.
+# Connect calendars and enable Requires Confirmation in Cal.com before enabling.
+# Never store calendar credentials here.
+enabled = false
+provider = "cal.com"
+url = ""
+embed_url = ""
+confirmation = "manual"
+timezone = "America/Los_Angeles"
+
+workspace = "Wickson Hall 2039"
