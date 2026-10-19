@@ -1,4 +1,23 @@
 # Add entries here; the template groups and sorts by year.
+# Added from Google Scholar on 2026-10-19; citations checked against journal records.
+# https://taiwania.ntu.edu.tw/abstract/2199
+[[items]]
+year = 2026
+authors = "Zhao, X.J., Ya, J.D., Guo, Z.R., Liu, C., Zhang, W., Peng, Q., Yang, H., Zhang, T., **Wang, Y.F.**"
+title = "*Aristolochia pendulistoma*, a new species of Aristolochiaceae from Nujiang Canyon, Yunnan, China."
+journal = "Taiwania"
+volume = "71: 531–537"
+doi = "https://doi.org/10.6165/tai.2026.71.531"
+link_label = "Read paper"
+# https://pmc.ncbi.nlm.nih.gov/articles/PMC13109732/
+[[items]]
+year = 2026
+authors = "**Wang, Y.F.**, Liao, S., Landrein, S., Nguyen, K.S., Onyenedum, J.G., Guo, Z.R."
+title = "*Aristolochia ferox*, a new species of subg. *Siphisia* (Aristolochiaceae) from Guangxi, China."
+journal = "PhytoKeys"
+volume = "273: 171–183"
+doi = "https://doi.org/10.3897/phytokeys.273.169468"
+link_label = "Read paper"
 [[items]]
 year = 2025
 authors = "**Wang, Y.F.**, Liao, S., Guo, Z.R., Li, P., Huang, Y.S., Onyenedum, J.G."

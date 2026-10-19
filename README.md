@@ -28,7 +28,7 @@ A push to `main` runs validation and deploys via `.github/workflows/hugo.yaml`. 
 | Your news, notes, ideas, and photo posts | `content/news/<slug>/index.md` |
 | Gallery: artwork, commissions, and captions | `content/gallery/` |
 | Album entry linked from News, with original photographs and captions | `content/news/album/` |
-| Public CV | `static/files/Yifan_CV.pdf` |
+| Public CV and its last-updated date | `static/files/Yifan_CV.pdf`; `cv_updated` in `content/cv/index.md` |
 | Booking links, activation switch, and workspace | `data/booking.toml` |
 | Course assignments and office hours | `data/teaching.toml` |
 | Unified typography, colors, responsive layout | `assets/css/site.css` |
@@ -56,6 +56,10 @@ Add `cover.jpg` beside the Markdown file, write `card_summary`, and choose `rese
 ### Add a publication
 
 Append an `[[items]]` block in `data/publications.toml`. Years are sorted and grouped automatically. `cover` is optional and must only be set for an actual cover feature. Additional cover features reuse the same size and layout. Ordinary paper first pages are not displayed as cover features.
+
+### Update the CV
+
+When replacing the CV, set `cv_updated` in `content/cv/index.md` to the document's actual revision date (`YYYY-MM-DD`). The date above the download links describes the CV contents, not the website build or upload date.
 
 ### Images and fonts
 

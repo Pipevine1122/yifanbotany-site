@@ -1,5 +1,6 @@
 {{ $src := .Get "src" | strings.TrimPrefix "/" | relURL }}
 <div class="pdf-viewer">
+  {{ with .Page.Params.cv_updated }}<p>CV last updated: <time datetime="{{ . }}">{{ time.Format "January 2, 2006" . }}</time></p>{{ end }}
   <div class="link-list"><a class="button" href="{{ $src }}" download>Download CV (PDF)</a><a href="{{ $src }}" target="_blank" rel="noopener">Open PDF in a new tab</a></div>
   <object data="{{ $src }}" type="application/pdf" aria-label="Yifan Wang’s curriculum vitae"><p>Your browser cannot display this PDF. <a href="{{ $src }}">Open or download the CV</a>.</p></object>
 </div>
