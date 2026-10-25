@@ -1,4 +1,13 @@
 # Add entries here; the template groups and sorts by year.
+# Published 21 October 2026; use the official EPUB until a DOI is verified.
+[[items]]
+year = 2026
+authors = "**Wang, Y.F.**, Guo, Z.R."
+title = "*Aristolochia crispata* (Aristolochiaceae), a new species from Guangdong, China."
+journal = "Annales Botanici Fennici"
+volume = "63: 283–291"
+url = "https://www.annbot.net/shared/PDF/anb63/anb63-283.epub"
+link_label = "Read paper (EPUB)"
 # Added from Google Scholar on 2026-10-19; citations checked against journal records.
 # https://taiwania.ntu.edu.tw/abstract/2199
 [[items]]

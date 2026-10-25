@@ -35,13 +35,19 @@ def main():
         data[path.stem] = tomllib.loads(path.read_text())
     errors = validate_booking(data["booking"])
     for index, item in enumerate(data["publications"]["items"], 1):
-        for key in ("title", "authors", "year", "doi"):
+        for key in ("title", "authors", "year"):
             if not item.get(key):
                 errors.append(f"Publication {index}: missing {key}")
         if not isinstance(item.get("year"), int):
             errors.append(f"Publication {index}: year must be an integer")
-        if not item.get("doi", "").startswith("https://doi.org/"):
+        if not (item.get("doi") or item.get("url")):
+            errors.append(f"Publication {index}: provide a DOI or publisher URL")
+        if item.get("doi") and not item["doi"].startswith("https://doi.org/"):
             errors.append(f"Publication {index}: use a full HTTPS DOI URL")
+        if item.get("url"):
+            parsed = urlsplit(item["url"])
+            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+                errors.append(f"Publication {index}: use a full HTTPS publisher URL without credentials")
         if item.get("cover") and not (ROOT / "assets" / item["cover"]).is_file():
             errors.append(f"Publication {index}: cover does not exist")
     if errors:

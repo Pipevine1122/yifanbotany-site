@@ -7,7 +7,7 @@
   {{ with $covers }}<section class="featured-publications" aria-label="Cover features">
     {{ range . }}<article class="cover-feature">
       <figure>{{ partial "image-link.html" (dict "image" (resources.Get .cover) "alt" .cover_alt "width" 720 "sizes" "(max-width: 700px) 180px, 210px") }}</figure>
-      <div><p class="eyebrow">Cover feature · {{ .journal }} · {{ .year }}</p><h2>{{ .title | markdownify }}</h2><p>{{ .authors | markdownify }}</p><a href="{{ .doi }}">{{ .link_label }}</a></div>
+      <div><p class="eyebrow">Cover feature · {{ .journal }} · {{ .year }}</p><h2>{{ .title | markdownify }}</h2><p>{{ .authors | markdownify }}</p><a href="{{ .doi | default .url }}">{{ .link_label }}</a></div>
     </article>{{ end }}
   </section>{{ end }}
   {{ $years := slice }}{{ range $papers }}{{ $years = $years | append .year }}{{ end }}
@@ -16,7 +16,7 @@
     {{ range where $papers "year" . }}<li>
       <h3>{{ .title | markdownify }}</h3><p class="publication-authors">{{ .authors | markdownify }}</p>
       <p class="publication-venue">{{ with .journal }}<em>{{ . }}</em>{{ end }}{{ with .volume }} · {{ . }}{{ end }}{{ with .status }}{{ . }}{{ end }}{{ if .cover }} <span class="cover-label">Cover feature</span>{{ end }}</p>
-      <a class="publication-link" href="{{ .doi }}">{{ .link_label }}</a>
+      <a class="publication-link" href="{{ .doi | default .url }}">{{ .link_label }}</a>
     </li>{{ end }}
   </ol></section>{{ end }}
 </div>
