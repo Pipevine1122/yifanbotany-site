@@ -1,0 +1,19 @@
+{{ with site.Data.profile.societies }}
+<section class="profile-section home-societies" aria-labelledby="societies-title">
+  <h3 id="societies-title">Society memberships</h3>
+  <ul class="society-list">
+    {{ range . }}
+    <li><a class="society-link" href="{{ .url }}" aria-label="{{ .name }}" title="{{ .name }}">
+      <span class="society-art{{ if .monochrome }} society-art-monochrome{{ end }}">
+        {{ $logo := resources.Get .logo }}
+        {{ if eq (path.Ext .logo) ".svg" }}
+        <img src="{{ $logo.RelPermalink }}" width="{{ .logo_width }}" height="{{ .logo_height }}" alt="{{ .name }}" loading="lazy" decoding="async">
+        {{ else }}
+        {{ partial "image.html" (dict "image" $logo "alt" .name "width" 160 "sizes" "64px") }}
+        {{ end }}
+      </span>
+    </a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}

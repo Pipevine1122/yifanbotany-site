@@ -31,3 +31,68 @@ url = "https://ggha.ucdavis.edu/"
 [[affiliations]]
 name = "Department of Plant Sciences"
 url = "https://www.plantsciences.ucdavis.edu/"
+
+# Memberships and presentation supplied by Yifan, 29 October 2026.
+# Original official artwork is preserved; source URLs retained for future updates.
+[[societies]]
+name = "Botanical Society of America"
+url = "https://botany.org/"
+logo = "img/societies/botanical-society-of-america.png"
+logo_source = "https://botany.org/file.php?file=SiteAssets/home/BSALogoBlWh.png"
+
+[[societies]]
+name = "Ecological Society of America"
+url = "https://esa.org/"
+logo = "img/societies/ecological-society-of-america.svg"
+logo_width = 180
+logo_height = 96
+logo_source = "https://esa.org/wp-content/themes/esa-main/assets/imgs/logo-full.svg"
+monochrome = true
+
+[[societies]]
+name = "Society of Systematic Biologists"
+url = "https://www.systbio.org/"
+logo = "img/societies/society-of-systematic-biologists-full.jpg"
+logo_source = "https://www.uaf.edu/toolik/images/logos/ssb-color-logo.jpg"
+
+[[societies]]
+name = "American Society of Naturalists"
+url = "https://www.amnat.org/"
+logo = "img/societies/american-society-of-naturalists.png"
+logo_source = "https://www.amnat.org/.resources/asn/img/bgs/ASN_logo.png"
+
+[[societies]]
+name = "Society for the Study of Evolution"
+url = "https://www.evolutionsociety.org/"
+logo = "img/societies/society-for-the-study-of-evolution.svg"
+logo_width = 432
+logo_height = 202
+logo_source = "https://www.evolutionsociety.org/themes/SSEResponsive/images/logo.svg"
+
+[[societies]]
+name = "American Orchid Society"
+url = "https://www.aos.org/"
+logo = "img/societies/american-orchid-society.png"
+logo_source = "https://images.prismic.io/aosweb/21700e4d-2dc7-4360-b345-da6bcd919a7a_logo.png?auto=compress&fit=max&w=750"
+monochrome = true
+
+[[societies]]
+name = "California Native Plant Society"
+url = "https://www.cnps.org/"
+logo = "img/societies/california-native-plant-society.svg"
+logo_width = 155
+logo_height = 59
+logo_source = "https://www.cnps.org/wp-content/uploads/2026/06/Layer-11-1.svg"
+monochrome = true
+
+[[societies]]
+name = "Northern California Botanists"
+url = "https://norcalbotanists.org/"
+logo = "img/societies/northern-california-botanists.png"
+logo_source = "https://norcalbotanists.org/wp-content/uploads/2021/08/norcalbotanists_logo.png"
+
+[[societies]]
+name = "Davis Botanical Society"
+url = "https://herbarium.ucdavis.edu/davis-botanical-society"
+logo = "img/societies/davis-botanical-society.jpg"
+logo_source = "https://herbarium.ucdavis.edu/sites/g/files/dgvnsk15281/files/media/images/DBS%20bw%20logo%202.jpg"

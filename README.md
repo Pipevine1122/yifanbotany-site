@@ -21,6 +21,7 @@ A push to `main` runs validation and deploys via `.github/workflows/hugo.yaml`. 
 | --- | --- |
 | Site identity, contact email, navigation | `hugo.toml` |
 | Academic/social profiles; current and former affiliations | `data/profile.toml` |
+| Society memberships and official logos | `societies` in `data/profile.toml`; `assets/img/societies/` |
 | Biography | `content/about/index.md` |
 | Home introduction and botanical poster legend | `content/_index.md` |
 | Research cards and detail pages | `content/research/<project>/index.md` |
@@ -60,6 +61,10 @@ Append an `[[items]]` block in `data/publications.toml`. Years are sorted and gr
 ### Update the CV
 
 When replacing the CV, set `cv_updated` in `content/cv/index.md` to the document's actual revision date (`YYYY-MM-DD`). The date above the download links describes the CV contents, not the website build or upload date.
+
+### Society memberships
+
+The homepage shows memberships in a compact logo grid at the bottom of the profile sidebar. Each logo links to its society, with the full name available on hover and to assistive technology. Keep official logo artwork and its `logo_source` URL together; SVG entries also need their intrinsic width and height. White logos use `monochrome = true` to display as dark artwork on the light page background. This display treatment preserves the original asset files.
 
 ### Images and fonts
 

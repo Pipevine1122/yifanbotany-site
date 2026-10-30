@@ -70,6 +70,16 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
 .latest-update p { margin-bottom: .4rem; }
 .home-poster figcaption { padding: 1rem; }
 .poster-legend { line-height: 1.8; margin-top: 1rem; }
+/* Compact official marks; white artwork uses dark ink on the page background. */
+.home-societies { max-width: 232px; }
+.profile .home-societies h3 { color: var(--muted); font-size: .85rem; margin-bottom: .65rem; }
+.society-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: .35rem .65rem; }
+.society-list > li { min-width: 0; }
+.society-link { display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 2px; }
+.society-link:hover { background: #edf0e7; }
+.society-art { display: flex; align-items: center; justify-content: center; max-width: 64px; width: 100%; }
+.society-art img { width: auto; max-width: 100%; max-height: 38px; object-fit: contain; }
+.society-art-monochrome img { filter: brightness(0); opacity: .8; }
 .page-shell { padding-block: 3rem 4rem; min-height: 60vh; }
 .page-heading { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
 .lede { color: var(--muted); font-size: 1.15rem; }

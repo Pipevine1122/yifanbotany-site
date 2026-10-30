@@ -23,6 +23,7 @@
     <div class="profile-section"><h3>Previous labs &amp; training</h3><ul class="plain-list">{{ range site.Data.profile.training }}<li><a href="{{ .url }}">{{ .name }}</a></li>{{ end }}</ul></div>
     <div class="profile-section"><ul class="plain-list">{{ range site.Data.profile.academic }}<li><a href="{{ .url }}">{{ .name }}</a></li>{{ end }}</ul></div>
     <section class="profile-section home-calendar" aria-labelledby="home-calendar-title"><h2 id="home-calendar-title"><a href="{{ "meet/" | relURL }}">Let’s meet</a></h2>{{ partial "booking.html" (dict "id" "home-booking" "compact" true) }}</section>
+    {{ partial "societies.html" . }}
   </aside>
 </div>
 {{ end }}
