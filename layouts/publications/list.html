@@ -17,6 +17,7 @@
       <h3>{{ .title | markdownify }}</h3><p class="publication-authors">{{ .authors | markdownify }}</p>
       <p class="publication-venue">{{ with .journal }}<em>{{ . }}</em>{{ end }}{{ with .volume }} · {{ . }}{{ end }}{{ with .status }}{{ . }}{{ end }}{{ if .cover }} <span class="cover-label">Cover feature</span>{{ end }}</p>
       <a class="publication-link" href="{{ .doi | default .url }}">{{ .link_label }}</a>
+      {{ with .epub }}<span aria-hidden="true"> · </span><a class="publication-link" href="{{ . }}">EPUB</a>{{ end }}
     </li>{{ end }}
   </ol></section>{{ end }}
 </div>
