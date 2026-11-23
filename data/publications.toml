@@ -1,4 +1,14 @@
 # Add entries here; the template groups and sorts by year.
+# https://phytotaxa.mapress.com/pt/article/view/phytotaxa.785.2.8
+[[items]]
+year = 2026
+authors = "**Wang, Y.F.**, Liao, S., Ya, J.D., Guo, Z.R."
+title = "*Aristolochia dengii*, a new species of subg. *Siphisia* (Aristolochiaceae) from China."
+journal = "Phytotaxa"
+volume = "785: 281–290"
+doi = "https://doi.org/10.11646/phytotaxa.785.2.8"
+researchgate = "https://www.researchgate.net/publication/418251180_Aristolochia_dengii_a_new_species_of_subg_Siphisia_Aristolochiaceae_from_China"
+link_label = "DOI"
 # Published 21 October 2026; DOI verified against the journal listing on 9 November 2026.
 [[items]]
 year = 2026
